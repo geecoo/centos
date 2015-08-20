@@ -1,0 +1,43 @@
+#!/bin/zsh
+
+cd /data/src
+
+if [[ ! -f "yaf-2.3.4.tgz" ]];then
+    wget -O yaf-2.3.4.tgz http://pecl.php.net/get/yaf-2.3.4.tgz
+fi
+
+tar -xzvf yaf-2.3.4.tgz
+
+cd yaf-2.3.4
+
+if [[ "$?" -ne 0 ]];then
+    echo "Not found directory yaf-2.3.4"
+    exit 1
+fi
+
+/usr/local/php/bin/phpize
+
+./configure --with-php-config=/usr/local/php/bin/php-config
+
+make && make install
+
+grep "^extension_dir" /etc/php.ini  
+if [[ "$?" -ne 0 ]];then
+    echo "extension_dir=/usr/local/php/lib/php/extensions/no-debug-zts-20131226" >> /etc/php.ini
+fi
+
+grep "yaf.so" /etc/php.ini 
+if [[ "$?" -ne 0 ]];then
+    echo "extension=yaf.so" >> /etc/php.ini
+fi
+
+cat<<EOF
+Maybe config :
+[yaf] 
+yaf.use_namespace = 0 
+yaf.environ = product 
+yaf.use_spl_autoload = 1 
+;yaf.name_suffix        = 0 
+yaf.forward_limit = 5 
+EOF
+
