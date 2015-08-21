@@ -36,6 +36,7 @@ function install_php() {
     --enable-sockets \
     --enable-pcntl \
     --enable-fpm \
+    --enable-soap \
     --with-gd \
     --with-mcrypt \
     --with-curl \
