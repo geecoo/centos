@@ -13,7 +13,7 @@ tar -xzvf ImageMagick.tar.gz
 cd ImageMagick-6.9.2-4
 
 if [[ "$?" -ne 0 ]];then
-    echo "Not found directory ImageMagick-6.9.2-0"
+    echo "Not found directory ImageMagick-6.9.2-4"
     exit 1
 fi
 
