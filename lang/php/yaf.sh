@@ -2,16 +2,16 @@
 
 cd /data/src
 
-if [[ ! -f "yaf-2.3.4.tgz" ]];then
-    wget -O yaf-2.3.4.tgz http://pecl.php.net/get/yaf-2.3.4.tgz
+if [[ ! -f "yaf-3.0.2.tgz" ]];then
+    wget -O yaf-3.0.2.tgz http://pecl.php.net/get/yaf-3.0.2.tgz
 fi
 
-tar -xzvf yaf-2.3.4.tgz
+tar -xzvf yaf-3.0.2.tgz
 
-cd yaf-2.3.4
+cd yaf-3.0.2
 
 if [[ "$?" -ne 0 ]];then
-    echo "Not found directory yaf-2.3.4"
+    echo "Not found directory yaf-3.0.2"
     exit 1
 fi
 
@@ -22,8 +22,10 @@ fi
 make && make install
 
 grep "^extension_dir" /etc/php.ini  
+
 if [[ "$?" -ne 0 ]];then
-    echo "extension_dir=/usr/local/php/lib/php/extensions/no-debug-zts-20131226" >> /etc/php.ini
+    #echo "extension_dir=/usr/local/php/lib/php/extensions/no-debug-zts-20151012" >> /etc/php.ini
+    echo "Not found configure 'extension_dir' "
 fi
 
 grep "yaf.so" /etc/php.ini 

@@ -4,6 +4,12 @@
 
 cd /data/src
 
+yum info libmemcached
+
+if [[ "$?" -ne 0 ]];then
+    yum install -y libmemcached libmemcached-devel
+fi
+
 if [[ ! -f "memcached-2.2.0.tgz" ]];then
     wget -O memcached-2.2.0.tgz http://pecl.php.net/get/memcached-2.2.0.tgz
 fi

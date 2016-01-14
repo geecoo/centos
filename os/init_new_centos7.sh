@@ -108,13 +108,15 @@ yum install iptables-services -y
 systemctl stop firewalld
 systemctl disable firewalld
 
-systemctl start iptables
-systemctl enable iptables
-
-systemctl start ip6tables
-systemctl disable ip6table
+#systemctl start iptables
+#systemctl enable iptables
 systemctl stop iptables
 systemctl disable iptables
+
+#systemctl start ip6tables
+#systemctl enable ip6tables
+systemctl stop ip6tables
+systemctl disable ip6tables
 
 # 7 . add epel 
 rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm

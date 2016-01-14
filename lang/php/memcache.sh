@@ -23,7 +23,8 @@ make && make install
 
 grep "^extension_dir" /etc/php.ini  
 if [[ "$?" -ne 0 ]];then
-    echo "extension_dir=/usr/local/php/lib/php/extensions/no-debug-zts-20131226" >> /etc/php.ini
+    #echo "extension_dir=/usr/local/php/lib/php/extensions/no-debug-zts-20131226" >> /etc/php.ini
+    echo "skip configure 'extension_dir'"
 fi
 
 grep "memcache.so" /etc/php.ini 
