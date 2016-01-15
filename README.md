@@ -34,3 +34,33 @@ sh os/vim/vim-7.4.sh
 rpm -qa | grep php
 rpm -e 完整包名
 
+
+
+
+# Git 配置参考
+
+配置文件存储： ~/.gitconfig
+
+git config --global user.name "geecoo"
+
+git config --global user.email jackjie009@gmail.com 
+
+git config --global core.editor vim
+
+git config --global merge.tool vimdiff
+
+单独查看用户名
+git config user.name
+
+查看全局配置
+git config --list 
+
+三种方式获取命令help
+git help <verb>  
+git <verb> --help
+man git-<verb>
+
+<END Git>
+
+
+
