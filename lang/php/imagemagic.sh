@@ -3,6 +3,7 @@
 cd /data/src
 
 # first install imageMagick server
+# yum install -y ImageMagick ImageMagick-devel
 
 if [[ ! -f "ImageMagick.tar.gz" ]];then
     wget -O ImageMagick.tar.gz http://www.imagemagick.org/download/ImageMagick.tar.gz
@@ -10,10 +11,10 @@ fi
 
 tar -xzvf ImageMagick.tar.gz
 
-cd ImageMagick-6.9.2-4
+cd ImageMagick-6.9.3-0
 
 if [[ "$?" -ne 0 ]];then
-    echo "Not found directory ImageMagick-6.9.2-4"
+    echo "Not found directory ImageMagick-6.9.3-0"
     exit 1
 fi
 
@@ -30,16 +31,16 @@ fi
 
 cd /data/src
 
-if [[ ! -f "imagick-3.1.2.tgz" ]];then
-    wget -O imagick-3.1.2.tgz http://pecl.php.net/get/imagick-3.1.2.tgz
+if [[ ! -f "imagick-3.4.0RC5.tgz" ]];then
+    wget -O imagick-3.4.0RC5.tgz http://pecl.php.net/get/imagick-3.4.0RC5.tgz
 fi
 
-tar -xzvf imagick-3.1.2.tgz
+tar -xzvf imagick-3.4.0RC5.tgz
 
-cd imagick-3.1.2
+cd imagick-3.4.0RC5
 
 if [[ "$?" -ne 0 ]];then
-    echo "Not found directory imagick-3.1.2"
+    echo "Not found directory imagick-3.4.0RC5"
     exit 1
 fi
 
@@ -50,9 +51,6 @@ fi
 make && make install
 
 grep "^extension_dir" /etc/php.ini  
-if [[ "$?" -ne 0 ]];then
-    echo "extension_dir=/usr/local/php/lib/php/extensions/no-debug-zts-20131226" >> /etc/php.ini
-fi
 
 grep "imagick.so" /etc/php.ini 
 if [[ "$?" -ne 0 ]];then
