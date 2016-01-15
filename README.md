@@ -56,11 +56,11 @@ git config user.name
 git config --list 
 
 三种方式获取命令help
-git help <verb>  
-git <verb> --help
-man git-<verb>
+git help < verb >  
+git < verb > --help
+man git-< verb >
 
-<END Git>
+< END Git >
 
 
 
