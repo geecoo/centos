@@ -27,8 +27,12 @@ sh os/vim/vim-7.4.sh
    sh lamp.sh php 
    配套扩展(yaf, redis, memcached, imagemagick)默认没有安装 
    请到lang/php下自行执行对应的脚本
-
-
+   
+   如果安装出错，执行以下步骤,清理所有已安装的php数据
+   1. rm -fr /usr/lib64/php/modules
+   2. rm -fr /usr/... /no-debug...(路径忘记了)
+   3. rm -f /etc/php.*
+   4. rm -fr /usr/local/php
 
 卸载软件
 rpm -qa | grep php

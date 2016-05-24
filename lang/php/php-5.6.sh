@@ -8,25 +8,30 @@ function install_php() {
     
     cd "${TAR_SRC_DIR}"
 
-    if [ ! -f "php-5.6.11.tar.gz" ];then 
-        wget --no-check-certificate -O php-5.6.11.tar.gz http://cn2.php.net/get/php-5.6.11.tar.gz/from/this/mirror
+    if [ ! -f "php-5.6.21.tar.gz" ];then 
+        wget --no-check-certificate -O php-5.6.21.tar.gz http://cn2.php.net/get/php-5.6.21.tar.gz/from/this/mirror
     fi
     
-    tar -xzvf php-5.6.11.tar.gz 
+    tar -xzvf php-5.6.21.tar.gz 
 
-    cd php-5.6.11
+    cd php-5.6.21
 
     if [[ "$?" -ne 0 ]];then
-        watchdog "Not found directory 'php-5.6.11'" ERROR
+        watchdog "Not found directory 'php-5.6.21'" ERROR
         exit 1
     fi
 
     ./configure --prefix=/usr/local/php \
     --with-mysql=mysqlnd \
-    --with-pdo-mysql=mysqlnd \
     --with-mysqli=mysqlnd \
+    --with-pdo-mysql=mysqlnd \
+    --with-pcre-regex \
+    --with-iconv \
     --with-openssl \
+    --with-mhash \
+    --with-xmlrpc \
     --enable-mbstring \
+    --with-imap-ssl \
     --with-freetype-dir \
     --with-jpeg-dir \
     --with-png-dir \
@@ -36,18 +41,34 @@ function install_php() {
     --enable-sockets \
     --enable-pcntl \
     --enable-fpm \
+    --enable-mysqlnd \
+    --enable-soap \
+    --enable-opcache \
     --with-gd \
     --with-mcrypt \
     --with-curl \
     --with-config-file-path=/etc \
     --with-config-file-scan-dir=/etc/php.d \
     --with-bz2 \
-    --with-apxs2=/usr/local/apache/bin/apxs \
+    --with-apxs2=/usr/local/apache24/bin/apxs \
     --enable-maintainer-zts  \
     --enable-bcmath \
     --enable-intl  \
     --enable-zip \
-    --disable-fileinfo
+    --enable-sysvmsg \
+    --enable-sysvsem \
+    --enable-sysvshm \
+    --enable-shmop \
+    --enable-zend-multibyte \
+    --enable-ftp 
+
+    # --disable-fileinfo
+
+    # 禁用传递其他运行库搜索路径
+    #--disable-rpath 
+
+    # 禁止调试模式 
+    # --disable-debug
     
     #  virtual memory exhausted: Cannot allocate memory
     #  add --disable-fileinfo
@@ -82,28 +103,11 @@ function watchdog() {
 }
 
 function init_php_ini() {
-    local php_src_dir=${TAR_SRC_DIR}/php-5.6.11
+    local php_src_dir=${TAR_SRC_DIR}/php-5.6.21
     local php_install_dir=/usr/local/php
     local php_fpm_conf_dir=/usr/local/php/etc/php-fpm.conf
 
     cp "${php_src_dir}/php.ini-production" /etc/php.ini
-    sed -i \                                                
-        "s@^;date.timezone.*@date.timezone = Asia/Shanghai@; \
-        s@^display_errors.*@display_errors = On@; \        
-        s@^display_startup_errors.*@display_startup_errors = On@; \
-        s@^post_max_size.*@post_max_size = 64M@; \         
-        s@^max_execution_time.*@max_execution_time = 600@; \
-        s@^max_input_vars.*@max_input_vars = 5000@; \      
-        s@^memory_limit.*@memory_limit = 512M@; \          
-        s@^error_reporting.*@error_reporting = E_ALL@; \   
-        s@^upload_max_filesize.*@upload_max_filesize = 20M@" \ 
-        /etc/php.ini  
-
-    if [[ "$?" -ne 0 ]];then
-        watchdog  "[ERROR] configure php.ini failure" ERROR 
-        exit 1
-    fi 
-
     cp "${php_src_dir}/sapi/fpm/init.d.php-fpm.in" /etc/rc.d/init.d/php-fpm
 
     if [ ! -f /etc/php.ini ];then
@@ -169,9 +173,10 @@ function init_php_ini() {
 
 case $1 in
     install)
-        if [ -f "/usr/local/apache/bin/apxs" ];then
+        if [ -f "/usr/local/apache/bin/apxs" ] || [ -f "/usr/local/apache24/bin/apxs" ];then
             install_php
         else
+            echo "HAHA"
             watchdog "Please install apache" ERROR
         fi
     ;;

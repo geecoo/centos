@@ -22,9 +22,10 @@ fi
 make && make install
 
 grep "^extension_dir" /etc/php.ini  
-if [[ "$?" -ne 0 ]];then
-    #echo "extension_dir=/usr/local/php/lib/php/extensions/no-debug-zts-20151012" >> /etc/php.ini
-fi
+
+#if [[ "$?" -ne 0 ]];then
+#    echo "extension_dir=/usr/local/php/lib/php/extensions/no-debug-zts-20151012" >> /etc/php.ini
+#fi
 
 grep "redis.so" /etc/php.ini 
 if [[ "$?" -ne 0 ]];then

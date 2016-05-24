@@ -40,6 +40,12 @@ case $1 in
         #first_init_account
     ;;
     
+    php6)
+        echo "Install php6"
+        sh "${SCRIPT_ROOT_DIR}/lang/php/php-5.6.sh" install
+        #sh "${SCRIPT_ROOT_DIR}/lang/php/php-5.6.sh" init
+    ;;
+
     php)
         sh "${SCRIPT_ROOT_DIR}/lang/php/php-7.0.2.sh" install
         sh "${SCRIPT_ROOT_DIR}/lang/php/php-7.0.2.sh" init
