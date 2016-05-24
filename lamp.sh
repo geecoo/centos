@@ -43,7 +43,7 @@ case $1 in
     php6)
         echo "Install php6"
         sh "${SCRIPT_ROOT_DIR}/lang/php/php-5.6.sh" install
-        #sh "${SCRIPT_ROOT_DIR}/lang/php/php-5.6.sh" init
+        sh "${SCRIPT_ROOT_DIR}/lang/php/php-5.6.sh" init
     ;;
 
     php)
