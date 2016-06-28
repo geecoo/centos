@@ -1,14 +1,15 @@
 * 配置IP
 
-1. vi /etc/sysconfig/network-scripts/ifcfg-eno16777736  
+```
+   vi /etc/sysconfig/network-scripts/ifcfg-eno16777736  
    配置好ip, 参考 os/ifcfg.sh
-```
-service network restart
-service network status
-```
-2. 如果是虚拟机， 用桥接模式
 
-3. 到这一步， 网络已连通 
+   service network restart
+   service network status
+```
+
+>如果是虚拟机， 选择桥接模式, 到这一步， 虚拟机已连通网络
+
 
 * 初始化centos环境
 
