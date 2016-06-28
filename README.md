@@ -33,9 +33,10 @@ cd ~/.vim/bundle/Trinity/plugin && rm -f NERD_tree.vim
 ```
 
 * 安装apache
-``
+```
    source lamp.sh httpd  
-``
+```
+
 
 4) 安装数据库percona
    sh lamp.sh percona 
