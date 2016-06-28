@@ -24,8 +24,18 @@
 sh os/vim/vim-7.4.sh  
 ```
 
-3) 安装apache
-   sh lamp.sh httpd  
+* 初始化dotfiles
+```
+cd ~ && git clone https://github.com/geecoo/dotfiles.git && cd dotfiles && source bin/dotfile install
+PlugInstall [name ...] [#threads]
+PlugStatus
+cd ~/.vim/bundle/Trinity/plugin && rm -f NERD_tree.vim
+```
+
+* 安装apache
+``
+   source lamp.sh httpd  
+``
 
 4) 安装数据库percona
    sh lamp.sh percona 
