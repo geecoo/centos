@@ -61,14 +61,15 @@ cd ~/.vim/bundle/Trinity/plugin && rm -f NERD_tree.vim
    3. rm -fr /usr/local/php
 ```
 
-卸载软件
+* 卸载软件
+```
 rpm -qa | grep php
 rpm -e 完整包名
+```
 
 
 
-
-# Git 配置参考
+* Git 配置参考
 
 配置文件存储： ~/.gitconfig
 
