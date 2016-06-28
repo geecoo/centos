@@ -1,21 +1,27 @@
+* 配置IP
+
 1. vi /etc/sysconfig/network-scripts/ifcfg-eno16777736  
    配置好ip, 参考 os/ifcfg.sh
-
+```
+service network restart
+service network status
+```
 2. 如果是虚拟机， 用桥接模式
 
 3. 到这一步， 网络已连通 
 
-4. yum install -y wget git
+* 初始化centos环境
 
+```
+   yum install -y wget git
    git clone https://github.com/geecoo/centos.git && cd centos
+   sh os/init_centos7.sh
+```
 
-完成以上命令，请根据需要执行相应的命令
-
-1) 初始化centos 7 环境
-sh os/init_new_centos7.sh   
-
-2) 安装vim 
+* 安装vim 
+```
 sh os/vim/vim-7.4.sh  
+```
 
 3) 安装apache
    sh lamp.sh httpd  
