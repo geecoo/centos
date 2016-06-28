@@ -1,0 +1,21 @@
+
+--prefix #nginx安装目录，默认在/usr/local/nginx
+--pid-path #pid问件位置，默认在logs目录
+--lock-path #lock问件位置，默认在logs目录
+--with-http_ssl_module #开启HTTP SSL模块，以支持HTTPS请求。
+--with-http_dav_module #开启WebDAV扩展动作模块，可为文件和目录指定权限
+--with-http_flv_module #支持对FLV文件的拖动播放
+--with-http_realip_module #支持显示真实来源IP地址
+--with-http_gzip_static_module #预压缩文件传前检查，防止文件被重复压缩
+--with-http_stub_status_module #取得一些nginx的运行状态
+--with-mail #允许POP3/IMAP4/SMTP代理模块
+--with-mail_ssl_module #允许POP3／IMAP／SMTP可以使用SSL／TLS
+--with-pcre=../pcre-8.11 #注意是未安装的pcre路径
+--with-zlib=../zlib-1.2.5 #注意是未安装的zlib路径
+--with-debug #允许调试日志
+--http-client-body-temp-path #客户端请求临时文件路径
+--http-proxy-temp-path #设置http proxy临时文件路径
+--http-fastcgi-temp-path #设置http fastcgi临时文件路径
+--http-uwsgi-temp-path=/var/tmp/nginx/uwsgi #设置uwsgi 临时文件路径
+--http-scgi-temp-path=/var/tmp/nginx/scgi #设置scgi 临时文件路径
+
