@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-cd /data/src
+cd /data/packages/src
 
 if [[ ! -f "solr-2.3.0.tgz" ]];then
     wget -O solr-2.3.0.tgz http://pecl.php.net/get/solr-2.3.0.tgz
@@ -22,12 +22,11 @@ fi
 make && make install
 
 if [[ "$?" -ne 0 ]];then
-    echo "install failed"
+    echo "solr install failed"
     exit 1
 fi
 
-grep "solr.so" /etc/php.ini 
-if [[ "$?" -ne 0 ]];then
+if [[ "$?" -eq 0 ]];then
     echo "extension=solr.so" >> /etc/php.ini
 fi
 

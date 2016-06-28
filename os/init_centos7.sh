@@ -3,7 +3,7 @@
 # vi /etc/sysconfig/network-scripts/ifcfg-eno16777736 
 
 # 1. first set timezone
-$(yes|cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime)
+/usr/bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 # 2. install yum fast mirror  
 yum install -y yum-plugin-fastestmirror
@@ -83,7 +83,8 @@ libaio* \
 libtool* \
 perl-ExtUtils-Embed \
 svn \
-git 
+git \
+ctags
 )
 
 for packagename in "${LIST_PACKS[@]}"
@@ -119,8 +120,9 @@ systemctl stop ip6tables
 systemctl disable ip6tables
 
 # 7 . add epel 
-rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
+rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-7.noarch.rpm
 
+# PHP depend on the package
 yum install -y mcrypt libmcrypt libmcrypt-devel
 
 # yum install fast

@@ -2,7 +2,7 @@
 
 # php extension memcached  via libmemcached library
 
-cd /data/src
+cd /data/packages/src
 
 yum info libmemcached
 

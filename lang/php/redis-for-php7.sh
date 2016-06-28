@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /data/src
+cd /data/packages/src
 
 if [[ ! -d phpredis ]];then
     git clone https://github.com/edtechd/phpredis.git
@@ -19,15 +19,7 @@ fi
 
 make && make install
 
-grep "^extension_dir" /etc/php.ini  
-
-if [[ "$?" -ne 0 ]];then
-    # echo "extension_dir=/usr/local/php/lib/php/extensions/no-debug-zts-20151012" >> /etc/php.ini
-    echo "Not found configure 'extension_dir'"
-fi
-
-grep "redis.so" /etc/php.ini 
-if [[ "$?" -ne 0 ]];then
+if [[ "$?" -eq 0 ]];then
     echo "extension=redis.so" >> /etc/php.ini
 fi
 

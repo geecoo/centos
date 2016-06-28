@@ -1,60 +1,84 @@
 #!/bin/zsh
 
 if [[ -z "$TAR_SRC_DIR" ]];then
-    TAR_SRC_DIR="/data/src"
+    TAR_SRC_DIR="/data/packages/src"
+    mkdir -p $TAR_SRC_DIR
 fi
 
 function install_php() {
     
     cd "${TAR_SRC_DIR}"
 
-    if [ ! -f "php-7.0.2.tar.gz" ];then 
-        wget --no-check-certificate -O php-7.0.2.tar.gz http://cn2.php.net/get/php-7.0.2.tar.gz/from/this/mirror
+    if [ ! -f "php-5.6.23.tar.gz" ];then 
+        wget --no-check-certificate -O php-5.6.23.tar.gz http://cn2.php.net/get/php-5.6.23.tar.gz/from/this/mirror
     fi
     
-    tar -xzvf php-7.0.2.tar.gz 
+    tar -xzvf php-5.6.23.tar.gz 
 
-    cd php-7.0.2
+    cd php-5.6.23
 
     if [[ "$?" -ne 0 ]];then
-        watchdog "Not found directory 'php-7.0.2'" ERROR
+        echo "Not found directory 'php-5.6.23'"
         exit 1
     fi
 
     ./configure --prefix=/usr/local/php \
     --with-mysql=mysqlnd \
-    --with-pdo-mysql=mysqlnd \
     --with-mysqli=mysqlnd \
+    --with-pdo-mysql=mysqlnd \
+    --with-pcre-regex \
+    --with-iconv \
     --with-openssl \
-    --enable-mbstring \
+    --with-mhash \
+    --with-xmlrpc \
+    --with-imap-ssl \
     --with-freetype-dir \
     --with-jpeg-dir \
     --with-png-dir \
     --with-zlib \
     --with-libxml-dir=/usr \
-    --enable-xml \
-    --enable-sockets \
-    --enable-pcntl \
-    --enable-fpm \
-    --enable-soap \
     --with-gd \
     --with-mcrypt \
+    --with-mbstring \
     --with-curl \
     --with-config-file-path=/etc \
     --with-config-file-scan-dir=/etc/php.d \
     --with-bz2 \
-    --with-apxs2=/usr/local/apache/bin/apxs \
+    --enable-mbstring \
+    --enable-xml \
+    --enable-sockets \
+    --enable-pcntl \
+    --enable-sysvmsg \
+    --enable-sysvshm \
+    --enable-shmop \
+    --enable-fpm \
+    --enable-mysqlnd \
+    --enable-soap \
+    --enable-opcache \
     --enable-maintainer-zts  \
     --enable-bcmath \
     --enable-intl  \
-    --enable-zip
-    #--disable-fileinfo
+    --enable-zip \
+    --enable-sysvmsg \
+    --enable-sysvsem \
+    --enable-sysvshm \
+    --enable-shmop \
+    --enable-zend-multibyte \
+    --enable-ftp 
+
+    # --disable-fileinfo
+
+    # 禁用传递其他运行库搜索路径
+    #--disable-rpath 
+
+    # 禁止调试模式 
+    # --disable-debug
     
     #  virtual memory exhausted: Cannot allocate memory
     #  add --disable-fileinfo
     
     if [[ "$?" -ne 0 ]];then
-        watchdog "php compile failure" ERROR
+        echo "php compile failure"
         exit 1
     fi
 
@@ -62,46 +86,41 @@ function install_php() {
     make -j$(grep processor /proc/cpuinfo | wc -l) && make install
  
     if [[ "$?" -ne 0 ]];then
-        watchdog "php make install failure " ERROR
+        echo "php install failure "
         exit 1
     fi
-   
-#    echo "export PATH=/usr/local/php/bin:/usr/local/php/sbin:\$PATH" > /etc/profile.d/php.sh
-    
-#    .  /etc/profile.d/httpd.sh
+
 }
 
-function watchdog() {
-    echo -en "\n"
-    echo "##" $(pwd)
-
-    case $2 in
-    ERROR|ERR)
-         echo -en "\033[0;30;41m" ;;
-    *)
-         echo -en "\033[0;30;42m" ;;
-    esac
-    
-    echo -en "$message\033[0;37m \n" 
-}
 
 function init_php_ini() {
-    local php_src_dir=${TAR_SRC_DIR}/php-7.0.2
+    local php_src_dir=${TAR_SRC_DIR}/php-5.6.23
     local php_install_dir=/usr/local/php
     local php_fpm_conf_dir=/usr/local/php/etc/php-fpm.conf
 
-    cp "${php_src_dir}/php.ini-production" /etc/php.ini
-    cp "${php_src_dir}/sapi/fpm/init.d.php-fpm.in" /etc/rc.d/init.d/php-fpm
+    /usr/bin/cp -f "${php_src_dir}/php.ini-production" /etc/php.ini
+    /usr/bin/cp -f "${php_src_dir}/sapi/fpm/init.d.php-fpm.in" /etc/rc.d/init.d/php-fpm
 
     if [ ! -f /etc/php.ini ];then
-        watchdog "[ERROR] Not found ${php_src_dir}/php.ini-productioni" ERROR 
+        echo "[ERROR] Not found ${php_src_dir}/php.ini-production" 
         exit 1
     fi 
-
-    source init.php.ini.sh    
+    
+    # init php.ini
+    sed -i \
+    "s@^;date.timezone.*@date.timezone = Asia/Shanghai@; \
+     s@^display_errors.*@display_errors = On@; \
+     s@^display_startup_errors.*@display_startup_errors = On@; \
+     s@^post_max_size.*@post_max_size = 64M@; \
+     s@^max_execution_time.*@max_execution_time = 600@; \
+     s@^max_input_vars.*@max_input_vars = 1000@; \
+     s@^memory_limit.*@memory_limit = 512M@; \
+     s@^error_reporting.*@error_reporting = E_ALL@; \
+     s@^upload_max_filesize.*@upload_max_filesize = 20M@" \
+     /etc/php.ini 
 
     if [ ! -f /etc/rc.d/init.d/php-fpm ];then
-        watchdog "[ERROR] Not found ${php_src_dir}/sapi/fpm/init.d.php-fpm.in" ERROR 
+        echo "[ERROR] Not found ${php_src_dir}/sapi/fpm/init.d.php-fpm.in"
         exit 1
     fi 
 
@@ -113,7 +132,7 @@ function init_php_ini() {
             /etc/rc.d/init.d/php-fpm 
 
     if [[ "$?" -ne 0 ]];then
-        watchdog  "[ERROR] configure php-fpm failure" ERROR 
+        echo  "[ERROR] configure php-fpm failure"
         exit 1
     fi 
 
@@ -128,14 +147,16 @@ function init_php_ini() {
     echo "$bin_path" > /etc/profile.d/php.sh 
     . /etc/profile.d/php.sh 
 
-    cp ${php_install_dir}/etc/php-fpm.conf.default ${php_fpm_conf_dir}
+
+    # php-fpm config #
+    
+    /usr/bin/cp -f ${php_install_dir}/etc/php-fpm.conf.default ${php_fpm_conf_dir}
 
     if [[ "$?" -ne 0 ]];then
-        watchdog  "[ERROR] Not found ${php_fpm_conf_dir}, copy failure" ERROR 
+        echo  "[ERROR] Not found ${php_fpm_conf_dir}, copy failure" 
         exit 1
     fi 
-
-
+    
     sed -i "s@^pm.max_children.*@pm.max_children = 50@; \
             s@^pm.start_servers.*@pm.start_servers = 5@; \
             s@^pm.min_spare_servers.*@pm.min_spare_servers = 2@; \
@@ -148,7 +169,7 @@ function init_php_ini() {
     sed -i "s@^listen.*@listen = 127.0.0.1:9000@" ${php_fpm_conf_dir} 
     
     if [[ "$?" -ne 0 ]];then
-        watchdog "[ERROR] configure ${php_fpm_conf_dir} failure" ERROR
+        echo "[ERROR] configure ${php_fpm_conf_dir} failure"
         exit 1
     fi
 
@@ -159,11 +180,7 @@ function init_php_ini() {
 
 case $1 in
     install)
-        if [ -f "/usr/local/apache/bin/apxs" ];then
-            install_php
-        else
-            watchdog "Please install apache" ERROR
-        fi
+        install_php
     ;;
 
     init)

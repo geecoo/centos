@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-cd /data/src
+cd /data/packages/src
 
 if [[ ! -f "memcache-3.0.8.tgz" ]];then
     wget -O memcache-3.0.8.tgz http://pecl.php.net/get/memcache-3.0.8.tgz

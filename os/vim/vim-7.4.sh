@@ -3,7 +3,7 @@
 cd /usr/local/src
 
 # check depends on
-yum install gcc libX11-devel libXtst-devel ncurses-devel perl-ExtUtils-Embed ruby ruby-devel python-devel gtk2-devel libXt-devel
+yum install -y gcc libX11-devel libXtst-devel ncurses-devel perl-ExtUtils-Embed ruby ruby-devel python-devel gtk2-devel libXt-devel
 
 if [ ! -f "vim-7.4.tar.bz2" ] || [ ! -f "vim-7.4.tar" ];then
     wget -O vim-7.4.tar.bz2 ftp://ftp.vim.org/pub/vim/unix/vim-7.4.tar.bz2

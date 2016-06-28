@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-cd /data/src
+cd /data/packages/src
 
 # first install imageMagick server
 # yum install -y ImageMagick ImageMagick-devel

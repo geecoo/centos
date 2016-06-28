@@ -1,17 +1,17 @@
 #!/bin/bash
 
-cd /data/src
+cd /data/packages/src
 
-if [[ ! -f "redis-2.2.7.tgz" ]];then
-    wget -O redis-2.2.7.tgz http://pecl.php.net/get/redis-2.2.7.tgz
+if [[ ! -f "redis-2.2.8.tgz" ]];then
+    wget -O redis-2.2.8.tgz http://pecl.php.net/get/redis-2.2.8.tgz
 fi
 
-tar -xzvf redis-2.2.7.tgz
+tar -xzvf redis-2.2.8.tgz
 
-cd redis-2.2.7
+cd redis-2.2.8
 
 if [[ "$?" -ne 0 ]];then
-    echo "Not found directory redis-2.2.7"
+    echo "Not found directory redis-2.2.8"
     exit 1
 fi
 
@@ -21,14 +21,7 @@ fi
 
 make && make install
 
-grep "^extension_dir" /etc/php.ini  
-
-#if [[ "$?" -ne 0 ]];then
-#    echo "extension_dir=/usr/local/php/lib/php/extensions/no-debug-zts-20151012" >> /etc/php.ini
-#fi
-
-grep "redis.so" /etc/php.ini 
-if [[ "$?" -ne 0 ]];then
+if [[ "$?" -eq 0 ]];then
     echo "extension=redis.so" >> /etc/php.ini
 fi
 
