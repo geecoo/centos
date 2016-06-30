@@ -5,6 +5,8 @@ if [[ -z "$TAR_SRC_DIR" ]];then
     mkdir -p $TAR_SRC_DIR
 fi
 
+basepath=$(cd `dirname $0`; pwd)
+
 cd $TAR_SRC_DIR
 
 if [ ! -f "nginx-1.10.0.tar.gz" ];then 
@@ -62,12 +64,15 @@ echo "export PATH=/usr/local/nginx/sbin:\$PATH" > /etc/profile.d/nginx.sh
 .  /etc/profile.d/nginx.sh
 
 # init.d script
-basepath=$(cd `dirname $0`; pwd)
-cp {$basepath}/script.sh /etc/init.d/nginx
+if [ -f "$basepath/script.sh" ];then
+    cp $basepath/script.sh /etc/init.d/nginx
+    chmod +x /etc/init.d/nginx
+fi
 
 cat<<EOF
+    Usage:
     cp web/nginx/script.sh /etc/init.d/nginx
-
+    chmod +x /etc/init.d/nginx
     /etc/init.d/nginx -h
 EOF
 
