@@ -37,6 +37,14 @@ cd ~/.vim/bundle/Trinity/plugin && rm -f NERD_tree.vim
    source lamp.sh httpd  
 ```
 
+* 安装nginx (推荐)
+```
+sh web/nginx/install.sh
+初始化配置
+cd web
+cp nginx/nginx.conf /usr/local/nginx/conf/nginx.conf
+cp -a nginx/conf.d /usr/local/nginx/conf.d
+```
 
 *  安装数据库percona
 ```  
@@ -67,7 +75,12 @@ rpm -qa | grep php
 rpm -e 完整包名
 ```
 
-
+* 验证sh脚本是否正确
+```
+   sh -n  xx.sh   语法检测
+   sh -v  xx.sh   打印脚本原始命令
+   sh -x  xx.sh   打印代码执行时的过程(执行顺序和结果)
+```
 
 * Git 配置参考
 
