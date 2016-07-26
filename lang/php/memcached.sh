@@ -1,5 +1,8 @@
 #!/bin/zsh
 
+# depend on libmemcached
+yum install -y  libmemcached libmemcached-devel
+
 # php extension memcached  via libmemcached library
 
 cd /data/packages/src
