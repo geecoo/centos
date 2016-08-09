@@ -1,6 +1,6 @@
 
  /usr/local/memcache/bin/memcached -d -m 512 -u apache -p 11211 -c 25600
- /usr/bin/memcached -p 11211 -d -u root -P /tmp/memcached.pid
+ /usr/bin/memcached -p 11211 -d -u root -P /var/run/memcached.pid
  -d选项是启动一个守护进程
  -m是分配给Memcache使用的内存数量, 默认64MB
  -u是运行Memcache的用户，默认是root

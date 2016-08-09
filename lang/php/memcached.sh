@@ -32,3 +32,11 @@ fi
 
 make && make install
 
+if [[ "$?" -ne 0 ]];then
+    echo "memcached install failed"
+    exit 1
+fi
+
+if [[ "$?" -eq 0 ]];then
+    echo "extension=memcached.so" >> /etc/php.ini
+fi

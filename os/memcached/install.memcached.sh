@@ -20,7 +20,7 @@ fi
 
 /usr/local/php/bin/phpize
 
-./configure --prefix=/usr/local/memcache/ --with-libevent=/usr
+./configure --prefix=/usr/local/memcached/ --with-libevent=/usr
 
 make && make install
 

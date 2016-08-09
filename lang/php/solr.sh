@@ -2,16 +2,16 @@
 
 cd /data/packages/src
 
-if [[ ! -f "solr-2.3.0.tgz" ]];then
-    wget -O solr-2.3.0.tgz http://pecl.php.net/get/solr-2.3.0.tgz
+if [[ ! -f "solr-2.4.0.tgz" ]];then
+    wget -O solr-2.4.0.tgz http://pecl.php.net/get/solr-2.4.0.tgz
 fi
 
-tar -xzvf solr-2.3.0.tgz
+tar -xzvf solr-2.4.0.tgz
 
-cd solr-2.3.0
+cd solr-2.4.0
 
 if [[ "$?" -ne 0 ]];then
-    echo "Not found directory solr-2.3.0"
+    echo "Not found directory solr-2.4.0"
     exit 1
 fi
 

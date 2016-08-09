@@ -2,16 +2,16 @@
 
 cd /data/packages/src
 
-if [[ ! -f "redis-2.2.8.tgz" ]];then
-    wget -O redis-2.2.8.tgz http://pecl.php.net/get/redis-2.2.8.tgz
+if [[ ! -f "redis-3.0.0.tgz" ]];then
+    wget -O redis-3.0.0.tgz http://pecl.php.net/get/redis-3.0.0.tgz
 fi
 
-tar -xzvf redis-2.2.8.tgz
+tar -xzvf redis-3.0.0.tgz
 
-cd redis-2.2.8
+cd redis-3.0.0
 
 if [[ "$?" -ne 0 ]];then
-    echo "Not found directory redis-2.2.8"
+    echo "Not found directory redis-3.0.0"
     exit 1
 fi
 
