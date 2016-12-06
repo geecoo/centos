@@ -1,5 +1,7 @@
 #!/bin/zsh
 # 用于安装vld扩展， 编译文件opcode
+# another extension xdebug
+# php -d vld.active=1 test.php
 
 mkdir -p /data/packages/src && cd /data/packages/src
 
