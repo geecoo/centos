@@ -9,14 +9,14 @@ basepath=$(cd `dirname $0`; pwd)
 
 cd $TAR_SRC_DIR
 
-if [ ! -f "nginx-1.10.0.tar.gz" ];then 
-    wget --no-check-certificate -O  nginx-1.10.0.tar.gz http://nginx.org/download/nginx-1.10.0.tar.gz 
+if [ ! -f "nginx-1.11.8.tar.gz" ];then 
+    wget --no-check-certificate -O  nginx-1.11.8.tar.gz http://nginx.org/download/nginx-1.11.8.tar.gz 
 fi
 
-tar -xzvf nginx-1.10.0.tar.gz && cd nginx-1.10.0
+tar -xzvf nginx-1.11.8.tar.gz && cd nginx-1.11.8
 
 if [[ "$?" -ne 0 ]];then
-    echo "not found directory nginx-1.10.0"
+    echo "not found directory nginx-1.11.8"
     exit 1
 fi
 
