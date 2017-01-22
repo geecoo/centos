@@ -2,7 +2,8 @@
 # 用于安装vld扩展， 编译文件opcode
 # another extension xdebug
 # php -d vld.active=1 test.php
-
+# http://jp2.php.net/manual/zh/internals2.opcodes.list.php#internals2.opcodes.list
+#
 mkdir -p /data/packages/src && cd /data/packages/src
 
 if [[ ! -d "vld" ]];then
