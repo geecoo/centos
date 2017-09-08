@@ -9,16 +9,16 @@ function install_php() {
     
     cd "${TAR_SRC_DIR}"
 
-    if [ ! -f "php-7.1.0.tar.gz" ];then 
-        wget --no-check-certificate -O php-7.1.0.tar.gz http://cn2.php.net/get/php-7.1.0.tar.gz/from/this/mirror
+    if [ ! -f "php-7.1.8.tar.gz" ];then 
+        wget --no-check-certificate -O php-7.1.8.tar.gz http://cn2.php.net/get/php-7.1.8.tar.gz/from/this/mirror
     fi
     
-    tar -xzvf php-7.1.0.tar.gz 
+    tar -xzvf php-7.1.8.tar.gz 
 
-    cd php-7.1.0
+    cd php-7.1.8
 
     if [[ "$?" -ne 0 ]];then
-        echo "Not found directory 'php-7.1.0'"
+        echo "not found directory 'php-7.1.8'"
         exit 1
     fi
 
@@ -65,7 +65,7 @@ function install_php() {
     --enable-shmop \
     --enable-zend-multibyte \
     --enable-ftp 
-
+    --enable-dtrace
     # --disable-fileinfo
 
     # 禁用传递其他运行库搜索路径
@@ -94,7 +94,7 @@ function install_php() {
 
 
 function init_php_ini() {
-    local php_src_dir=${TAR_SRC_DIR}/php-7.1.0
+    local php_src_dir=${TAR_SRC_DIR}/php-7.1.8
     local php_install_dir=/usr/local/php
     local php_fpm_conf_dir=/usr/local/php/etc/php-fpm.conf
 

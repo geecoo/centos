@@ -2,16 +2,16 @@
 
 mkdir -p /data/packages/src && cd /data/packages/src
 
-if [[ ! -f "yaf-3.0.3.tgz" ]];then
-    wget -O yaf-3.0.3.tgz http://pecl.php.net/get/yaf-3.0.3.tgz
+if [[ ! -f "yaf-3.0.5.tgz" ]];then
+    wget -O yaf-3.0.5.tgz http://pecl.php.net/get/yaf-3.0.5.tgz
 fi
 
-tar -xzvf yaf-3.0.3.tgz
+tar -xzvf yaf-3.0.5.tgz
 
-cd yaf-3.0.3
+cd yaf-3.0.5
 
 if [[ "$?" -ne 0 ]];then
-    echo "Not found directory yaf-3.0.3"
+    echo "not found directory yaf-3.0.5"
     exit 1
 fi
 

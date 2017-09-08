@@ -2,17 +2,17 @@
 
 mkdir -p /data/packages/src && cd /data/packages/src
 
-if [[ ! -f "swoole-1.8.8.tgz" ]];then
+if [[ ! -f "swoole-1.9.18.tgz" ]];then
     #wget -O swoole-1.8.7-stable.tar.gz https://github.com/swoole/swoole-src/archive/swoole-1.8.7-stable.tar.gz
-    wget -O swoole-1.8.8.tgz http://pecl.php.net/get/swoole-1.8.8.tgz
+    wget -O swoole-1.9.18.tgz http://pecl.php.net/get/swoole-1.9.18.tgz
 fi
 
-tar -xzvf swoole-1.8.8.tgz
+tar -xzvf swoole-1.9.18.tgz
 
-cd swoole-1.8.8
+cd swoole-1.9.18
 
 if [[ "$?" -ne 0 ]];then
-    echo "Not found directory swoole-1.8.8"
+    echo "Not found directory swoole-1.9.18"
     exit 1
 fi
 
