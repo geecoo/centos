@@ -7,15 +7,15 @@ fi
 function install_apr() {
     cd $TAR_SRC_DIR
 
-    if [ ! -f "apr-1.5.2.tar.gz" ];then 
-        wget --no-check-certificate -O apr-1.5.2.tar.gz http://mirrors.cnnic.cn/apache//apr/apr-1.5.2.tar.gz
+    if [ ! -f "apr-1.6.3.tar.gz" ];then 
+        wget --no-check-certificate -O apr-1.6.3.tar.gz https://mirrors.cnnic.cn/apache//apr/apr-1.6.3.tar.gz
     fi
     
-    tar -xzvf apr-1.5.2.tar.gz
-    cd apr-1.5.2 
+    tar -xzvf apr-1.6.3.tar.gz
+    cd apr-1.6.3 
 
     if [[ "$?" -ne 0 ]];then
-        echo "not found directory apr-1.5.2 ...no"
+        echo "not found directory apr-1.6.3 ...no"
         exit 1
     fi
     

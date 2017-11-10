@@ -120,7 +120,8 @@ systemctl stop ip6tables
 systemctl disable ip6tables
 
 # 7 . add epel 
-rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-7.noarch.rpm
+#rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-7.noarch.rpm
+rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7-11.noarch.rpm
 
 # PHP depend on the package
 yum install -y mcrypt libmcrypt libmcrypt-devel

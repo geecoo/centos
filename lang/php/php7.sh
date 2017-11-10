@@ -9,41 +9,48 @@ function install_php() {
     
     cd "${TAR_SRC_DIR}"
 
-    if [ ! -f "php-7.1.8.tar.gz" ];then 
-        wget --no-check-certificate -O php-7.1.8.tar.gz http://cn2.php.net/get/php-7.1.8.tar.gz/from/this/mirror
+    if [ ! -f "php-7.1.11.tar.gz" ];then 
+        wget --no-check-certificate -O php-7.1.11.tar.gz http://cn2.php.net/get/php-7.1.11.tar.gz/from/this/mirror
     fi
     
-    tar -xzvf php-7.1.8.tar.gz 
+    tar -xzvf php-7.1.11.tar.gz 
 
-    cd php-7.1.8
+    cd php-7.1.11
 
     if [[ "$?" -ne 0 ]];then
-        echo "not found directory 'php-7.1.8'"
+        echo "not found directory 'php-7.1.11'"
         exit 1
     fi
 
     ./configure --prefix=/usr/local/php \
-    --with-mysql=mysqlnd \
-    --with-mysqli=mysqlnd \
-    --with-pdo-mysql=mysqlnd \
-    --with-pcre-regex \
-    --with-iconv \
-    --with-openssl \
-    --with-mhash \
-    --with-xmlrpc \
-    --with-imap-ssl \
-    --with-freetype-dir \
-    --with-jpeg-dir \
-    --with-png-dir \
-    --with-zlib \
-    --with-libxml-dir=/usr \
-    --with-gd \
-    --with-mcrypt \
-    --with-mbstring \
     --with-curl \
+    --with-freetype-dir \
+    --with-gd \
+    --with-iconv-dir \
+    --with-kerberos \
+    --with-libdir=lib64 \
+    --with-libxml-dir=/usr \
+    --with-openssl \
+    --with-pcre-regex \
+    --with-pdo-mysql \
+    --with-pdo-sqlite \
+    --with-pear \
+    --with-png-dir \
+    --with-jpeg-dir \
+    --with-xmlrpc \
+    --with-xsl \
+    --with-zlib \
+    --with-bz2 \
+    --with-mhash \
+    --enable-fpm \
+    --enable-bcmath \
+    --enable-libxml \
+    --with-imap-ssl \
+    --with-mcrypt \
+    --enable-mbstring \
+    --enable-maintainer-zts \
     --with-config-file-path=/etc \
     --with-config-file-scan-dir=/etc/php.d \
-    --with-bz2 \
     --enable-mbstring \
     --enable-xml \
     --enable-sockets \
@@ -51,21 +58,18 @@ function install_php() {
     --enable-sysvmsg \
     --enable-sysvshm \
     --enable-shmop \
-    --enable-fpm \
     --enable-mysqlnd \
     --enable-soap \
     --enable-opcache \
-    --enable-maintainer-zts  \
-    --enable-bcmath \
-    --enable-intl  \
     --enable-zip \
     --enable-sysvmsg \
     --enable-sysvsem \
     --enable-sysvshm \
     --enable-shmop \
     --enable-zend-multibyte \
-    --enable-ftp 
-    --enable-dtrace
+    --enable-ftp
+
+    #--enable-dtrace
     # --disable-fileinfo
 
     # 禁用传递其他运行库搜索路径
@@ -83,7 +87,7 @@ function install_php() {
     fi
 
 
-    make -j$(grep processor /proc/cpuinfo | wc -l) && make install
+    make  && make install
  
     if [[ "$?" -ne 0 ]];then
         echo "php install failure "
@@ -94,7 +98,7 @@ function install_php() {
 
 
 function init_php_ini() {
-    local php_src_dir=${TAR_SRC_DIR}/php-7.1.8
+    local php_src_dir=${TAR_SRC_DIR}/php-7.1.11
     local php_install_dir=/usr/local/php
     local php_fpm_conf_dir=/usr/local/php/etc/php-fpm.conf
 

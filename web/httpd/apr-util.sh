@@ -7,16 +7,16 @@ fi
 function install_apr_util() {
     cd $TAR_SRC_DIR
 
-    if [ ! -f "apr-util-1.5.4.tar.gz" ];then 
-        wget --no-check-certificate -O apr-util-1.5.4.tar.gz http://mirrors.cnnic.cn/apache//apr/apr-util-1.5.4.tar.gz
+    if [ ! -f "apr-util-1.6.1.tar.gz" ];then 
+        wget --no-check-certificate -O apr-util-1.6.1.tar.gz https://mirrors.cnnic.cn/apache//apr/apr-util-1.6.1.tar.gz
     fi
     
-    tar -xzvf apr-util-1.5.4.tar.gz    
+    tar -xzvf apr-util-1.6.1.tar.gz    
 
-    cd apr-util-1.5.4 
+    cd apr-util-1.6.1 
 
     if [[ "$?" -ne 0 ]];then
-        echo "not found directory apr-util-1.5.4  ...no"
+        echo "not found directory apr-util-1.6.1  ...no"
         exit 1
     fi
  

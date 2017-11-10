@@ -8,15 +8,15 @@ fi
 function install_apache() {
     cd $TAR_SRC_DIR
 
-    if [ ! -f "httpd-2.4.20.tar.gz" ];then 
-        wget --no-check-certificate -O  httpd-2.4.20.tar.gz http://mirrors.cnnic.cn/apache//httpd/httpd-2.4.20.tar.gz    
+    if [ ! -f "httpd-2.4.29.tar.gz" ];then 
+        wget --no-check-certificate -O  httpd-2.4.29.tar.gz http://mirrors.cnnic.cn/apache//httpd/httpd-2.4.29.tar.gz    
     fi
     
-    tar -xzvf httpd-2.4.20.tar.gz
-    cd httpd-2.4.20
+    tar -xzvf httpd-2.4.29.tar.gz
+    cd httpd-2.4.29
 
     if [[ "$?" -ne 0 ]];then
-        echo "not found directory httpd-2.4.20  ...no"
+        echo "not found directory httpd-2.4.29  ...no"
         exit 1
     fi
     
