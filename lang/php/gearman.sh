@@ -1,5 +1,8 @@
 #!/bin/zsh
 
+yum install libgearman -y
+yum install re2c -y
+
 mkdir -p /data/packages/src && cd /data/packages/src
 
 if [[ ! -f "gearman.zip" ]];then
