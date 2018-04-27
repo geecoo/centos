@@ -9,14 +9,14 @@ basepath=$(cd `dirname $0`; pwd)
 
 cd $TAR_SRC_DIR
 
-if [ ! -f "node-v6.9.4.tar.gz" ];then 
-    wget --no-check-certificate -O  node-v6.9.4.tar.gz https://nodejs.org/dist/v6.9.4/node-v6.9.4.tar.gz 
+if [ ! -f "node-v8.11.1.tar.gz" ];then 
+    wget --no-check-certificate -O  node-v8.11.1.tar.gz https://nodejs.org/dist/v8.11.1/node-v8.11.1.tar.gz
 fi
 
-tar -xzvf node-v6.9.4.tar.gz && cd node-v6.9.4
+tar -xzvf node-v8.11.1.tar.gz && cd node-v8.11.1
 
 if [[ "$?" -ne 0 ]];then
-    echo "not found directory node-v6.9.4"
+    echo "not found directory node-v8.11.1"
     exit 1
 fi
 
