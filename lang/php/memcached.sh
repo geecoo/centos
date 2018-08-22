@@ -13,16 +13,16 @@ if [[ "$?" -ne 0 ]];then
     yum install -y libmemcached libmemcached-devel
 fi
 
-if [[ ! -f "memcached-3.0.3.tgz" ]];then
-    wget -O memcached-3.0.3.tgz http://pecl.php.net/get/memcached-3.0.3.tgz
+if [[ ! -f "memcached-3.0.4.tgz" ]];then
+    wget -O memcached-3.0.4.tgz http://pecl.php.net/get/memcached-3.0.4.tgz
 fi
 
-tar -xzvf memcached-3.0.3.tgz
+tar -xzvf memcached-3.0.4.tgz
 
-cd memcached-3.0.3
+cd memcached-3.0.4
 
 if [[ "$?" -ne 0 ]];then
-    echo "not found directory memcached-3.0.3"
+    echo "not found directory memcached-3.0.4"
     exit 1
 fi
 
