@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# echo $(dirname $BASH_SOURCE)
+BIN_DIR=$(cd `dirname $0`;pwd -P)
+ROOT_DIR=$(dirname $BIN_DIR)
+
+# Scripts directory
+CONF_DIR="$ROOT_DIR/conf"
+LOG_DIR="$ROOT_DIR/log"
+SCR_DIR="$ROOT_DIR/src"
+
+# load config
+. ${CONF_DIR}/*
+
+# load functions
+. /etc/init.d/functions
+. "$SCR_DIR/framework/lib/functions" 
+
+

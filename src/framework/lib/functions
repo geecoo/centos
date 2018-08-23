@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+
+# Capture terminated singal
+signal_exit() {
+    echo -ne "\r"
+    echo "Terminated By Ctrl + c. Bye..."
+    exit 0
+}
+
+trap "signal_exit" TERM INT HUP
+
+# A function to download 
+yaxios() {
+    local filename=$1
+    local remote_addr=$2
+
+    if [ "$#" -ne 2 ];then
+
+        log_error  "Usage: $0 <filename> <remote_addr>"
+
+    elif [ -f  ./$1 ];then
+
+        log_info  "File ${filename} already exist"
+
+    else
+
+        log_info "Downloading ${remote_addr}  saved as ${filename}" 
+
+        wget --no-check-certificate -O ${filename} ${remote_addr}
+        
+        if [[ "$?" -ne 0 ]];then 
+            log_error "${filename} downloaded failed" && kill -9 $$ 
+        else
+            log_success "${filename} downloaded successfully" 
+        fi 
+    fi
+}
+
+log_success() {
+    local message=$1
+    local log_file=$2
+
+    if [ $[ ${LOGGER_REPORTING} & ${LOGGER_ECHO} ] ];then
+        __echo_success "${message}"
+    fi 
+    
+    echo $(date)': ' "$message" >> $(__log_file)
+    echo -ne "\r"
+
+    return 0
+}
+
+log_error() {
+    local message=$1
+    local log_file=$2
+
+    if [ $[ ${LOGGER_REPORTING} & ${LOGGER_ECHO} ] ];then
+        __echo_failure "${message}"
+    fi 
+    
+    echo $(date)': ' "$message" >> $(__log_file)
+    echo -ne "\r"
+
+    return 1
+}
+
+log_info() {
+    local message=$1
+    local log_file=$2
+
+    if [ $[ ${LOGGER_REPORTING} & ${LOGGER_ECHO} ] ];then
+        __echo_warning "${message}"
+    fi 
+    
+    echo $(date)': ' "$message" >> $(__log_file)
+    echo -ne "\r"
+
+    return 1
+}
+
+
+__log_file()
+{
+    echo ${APP_LOG}
+}
+
+__echo_success() {
+    echo -n "[  "
+    $SETCOLOR_SUCCESS
+    echo -n $1
+    $SETCOLOR_NORMAL
+    echo -n "  ]"
+    echo -ne "\r" 
+    return 0
+}
+
+__echo_failure() {
+    echo -n "[  "
+    $SETCOLOR_FAILURE
+    echo -n $1
+    $SETCOLOR_NORMAL
+    echo -n "  ]"
+    echo -ne "\r" 
+    return 1
+}
+__echo_warning() {
+    echo -n "[ "
+    $SETCOLOR_WARNING
+    echo -n $1
+    $SETCOLOR_NORMAL
+    echo -n "  ]"
+    echo -ne "\r" 
+    return 1
+}
+yaxios "gearman-1.1.2.tgz" http://pecl.php.net/get/gearman-1.1.2.tgz
+#log_success "HELLO WORLD"
+#echo $[ ${LOGGER_REPORTING} & ${LOGGER_MAIL} ] 
