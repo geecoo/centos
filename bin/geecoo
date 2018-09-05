@@ -43,4 +43,3 @@ echo "Invoking:" ${invoking}
 echo "Params:" ${params}
 
 time . ${caller_abs_path}
-

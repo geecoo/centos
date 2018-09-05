@@ -1,0 +1,137 @@
+#!/usr/bin/env bash
+
+# Set timezone
+/usr/bin/cp -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+# Install yum fast mirror  
+yum install -y yum-plugin-fastestmirror
+
+# Update kernel
+yum clean all
+yum update -y
+
+# Install all develop package
+# yum remove -y dhclient dhcp-*
+
+# Add epel 
+rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7-11.noarch.rpm
+
+# Install all packages
+LIST_PACKS=(
+wget \
+unzip \
+bzip2 \
+telnet \
+rsync \
+patch \
+net-tools \
+python \
+python-devel \
+make \
+cmake \
+autoconf \
+automake  \
+gcc-c++ \
+gcc \ 
+curl \
+curl-devel \
+libcurl \
+libcurl-devel  \
+libxml2 \
+libxml2-devel  \
+bzip2*  \
+mhash  \
+mhash-devel \
+pcre \
+pcre-devel \
+openssl \
+openssl-devel \
+zlib-devel \
+php-devel \
+gd \
+freetype \
+freetype-devel \
+libjpeg \
+libjpeg-devel \
+libpng \
+libpng-devel  \
+libicu \
+libicu-devel \
+gtk+-devel \ 
+compat* \
+cpp \
+glibc \
+libgomp \
+libstdc++-devel \
+keyutils-libs-devel \
+libsepol-devel \
+libselinux-devel \
+krb5-devel \
+libXpm*   \
+fontconfig \
+fontconfig-devel \
+ncurses* \
+readline* \
+libaio* \
+libtool* \
+perl-ExtUtils-Embed \
+svn \
+git \
+ctags \
+yum-axelget \
+mcrypt \
+libmcrypt \
+libmcrypt-devel
+)
+
+for packagename in "${LIST_PACKS[@]}"
+do
+    yum install -y "$packagename"
+    usleep 256
+done
+
+unset $LIST_PACKS
+unset $packagename
+
+sleep 2
+
+#yum -y groupinstall "Development tools" "Server Platform Development"  
+
+# Disable selinux
+setenforce 0
+sed -i "s/SELINUX=enforcing/SELINUX=disabled/" /etc/selinux/config
+getenforce
+
+# Disable firewall
+yum install iptables-services -y
+
+systemctl stop firewalld
+systemctl disable firewalld
+
+#systemctl start iptables
+#systemctl enable iptables
+systemctl stop iptables
+systemctl disable iptables
+
+#systemctl start ip6tables
+#systemctl enable ip6tables
+systemctl stop ip6tables
+systemctl disable ip6tables
+
+# Install ntpdate
+yum install -y ntpdate
+
+# Set ntpdate
+# https://www.ntppool.org/zh/use.html
+#awk '$0~/cn.poll.ntp.org/' /etc/ntp/step-tickers
+grep 'cn.poll.ntp.org' /etc/ntp/step-tickers
+if [ "$?" -neq 0 ];then
+    echo 'cn.poll.ntp.org' >> /etc/ntp/step-tickers
+fi
+
+sed -i 's/^SYNC_HWCLOCK=no/SYNC_HWCLOCK=yes/' /etc/sysconfig/ntpdate   
+systemctl status ntpdate
+systemctl enable ntpdate
+systemctl start ntpdate
+
+
