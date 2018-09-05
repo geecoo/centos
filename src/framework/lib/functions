@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+usage() {
+    echo -ne "\r"
+    echo -ne "Usage"
+    echo -ne "\r"
+}
 
 # Capture terminated singal
 signal_exit() {
@@ -44,7 +49,7 @@ log_success() {
         __echo_success "${message}"
     fi 
     
-    echo $(date)': ' "$message" >> $(__log_file)
+    echo $(date '+ %F %T')': ' "$message" >> $(__log_file)
     echo -ne "\r"
 
     return 0
@@ -59,23 +64,22 @@ log_error() {
     fi 
     
     echo $(date)': ' "$message" >> $(__log_file)
-    echo -ne "\r"
 
-    return 1
+    return 0
 }
 
 log_info() {
     local message=$1
     local log_file=$2
 
-    if [ $[ ${LOGGER_REPORTING} & ${LOGGER_ECHO} ] ];then
-        __echo_warning "${message}"
-    fi 
+    #if [ $[ ${LOGGER_REPORTING} & ${LOGGER_ECHO} ] ];then
+        #__echo_warning "${message}"
+    #fi 
     
     echo $(date)': ' "$message" >> $(__log_file)
-    echo -ne "\r"
+    #echo -ne "\r"
 
-    return 1
+    return 0
 }
 
 
@@ -90,7 +94,7 @@ __echo_success() {
     echo -n $1
     $SETCOLOR_NORMAL
     echo -n "  ]"
-    echo -ne "\r" 
+    echo "" 
     return 0
 }
 
@@ -100,7 +104,7 @@ __echo_failure() {
     echo -n $1
     $SETCOLOR_NORMAL
     echo -n "  ]"
-    echo -ne "\r" 
+    echo "" 
     return 1
 }
 __echo_warning() {
@@ -109,9 +113,19 @@ __echo_warning() {
     echo -n $1
     $SETCOLOR_NORMAL
     echo -n "  ]"
-    echo -ne "\r" 
+    echo " " 
     return 1
 }
-yaxios "gearman-1.1.2.tgz" http://pecl.php.net/get/gearman-1.1.2.tgz
+
+__empty() {
+    local val="$1"
+    if [ "$val" ];then
+        return 0
+    fi
+
+    return 1
+}
+
+#yaxios "gearman-1.1.2.tgz" http://pecl.php.net/get/gearman-1.1.2.tgz
 #log_success "HELLO WORLD"
 #echo $[ ${LOGGER_REPORTING} & ${LOGGER_MAIL} ] 

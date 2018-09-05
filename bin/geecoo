@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 
 # echo $(dirname $BASH_SOURCE)
 BIN_DIR=$(cd `dirname $0`;pwd -P)
@@ -7,13 +7,40 @@ ROOT_DIR=$(dirname $BIN_DIR)
 # Scripts directory
 CONF_DIR="$ROOT_DIR/conf"
 LOG_DIR="$ROOT_DIR/log"
-SCR_DIR="$ROOT_DIR/src"
+SRC_DIR="$ROOT_DIR/src"
 
 # load config
 . ${CONF_DIR}/*
 
 # load functions
 . /etc/init.d/functions
-. "$SCR_DIR/framework/lib/functions" 
+. "$SRC_DIR/framework/lib/functions" 
+. "$SRC_DIR/framework/lib/argsparser" 
 
+################   Bootstrap loaded completed. ######################
+
+# entity action 
+## 解析参数 ##
+argsparser $@
+
+if [ ! "$caller" ];then
+    __echo_warning "The calling program could not be found." 
+    exit 1
+fi
+
+caller_abs_path=`finder ${caller}`
+
+if [ ! -f "$caller_abs_path" ];then
+    __echo_warning "Caller '${caller}' path not found." 
+    exit 1
+fi
+
+#echo "$@"
+#exec ${caller_abs_path} "$@" 
+
+echo "Caller :" ${caller}
+echo "Invoking:" ${invoking}
+echo "Params:" ${params}
+
+time . ${caller_abs_path}
 

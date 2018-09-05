@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+argsparser() {
+    if [ "$#" -eq 1 ];then
+        caller="$1"
+        return 0
+    fi
+
+    ARGS=`getopt -a -o c:m:P:I:D:h -l caller:,method:,params:instence:,database:,help -- "$@"`
+    
+    [ $? -ne 0 ] && usage
+
+    #set -- "${ARGS}"
+    # 防止参数中有shell命令，被错误的扩展
+    eval set -- "${ARGS}"
+
+    while true
+    do
+    case "$1" in
+         -c|--caller)
+            caller="$2"
+            shift
+            ;;
+         -m|--method)
+            invoking="$2"
+            shift
+            ;;
+        -P)
+            params="$2"
+            shift
+            ;;
+        -I|--instence)
+            instence="$2"
+            shift
+            ;;
+        -D|--database)
+            database="$2"
+            shift
+            ;;
+        -h|--help)
+            usage
+            ;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            continue
+            ;;
+    esac
+        shift
+    done
+
+    #for arg do echo '--> '"\`$arg'" ; done 
+}
+
+# 探测执行脚本的位置
+finder() {
+    local caller="$1"
+    local path
+
+    log_info "Looking for command '${caller}' path." 
+
+    path=$(find ${ROOT_DIR} -name ${caller})
+
+    if [ ! "$path" ];then 
+        log_info "Caller '${caller}' path not found." 
+        exit 0
+    fi
+
+    /bin/echo -nE "$path"
+    return 0
+}
