@@ -6,23 +6,26 @@ then
     mkdir -p $TAR_DIR
 fi
     
-#cd "${TAR_DIR}"
-if [ -d "$PREFIX/php"  ]
+cd "${TAR_DIR}"
+
+if [ -d "$INSTALL_PREFIX/php"  ]
 then
     echo "PHP is already installed."
     exit 0
 fi
 
-if [ ! -f "php-7.1.11.tar.gz" ];then 
-    wget --no-check-certificate -O php-7.1.11.tar.gz http://cn2.php.net/get/php-7.1.11.tar.gz/from/this/mirror
+S_VER_NAME="php-7.2.9.tar.gz"
+
+if [ ! -f "$S_VER_NAME" ];then 
+    wget --no-check-certificate -O "$S_VER_NAME" http://cn2.php.net/get/"$S_VER_NAME"/from/this/mirror
 fi
 
-tar -xzvf php-7.1.11.tar.gz 
+tar -xzvf "$S_VER_NAME" 
 
-cd php-7.1.11
+cd ${S_VER_NAME:0:(-7)}
 
 if [[ "$?" -ne 0 ]];then
-    echo "not found directory 'php-7.1.11'"
+    echo "Not found directory '${S_VER_NAME:0:(-7)}'"
     exit 1
 fi
 
@@ -86,7 +89,7 @@ fi
 #  add --disable-fileinfo
 
 if [[ "$?" -ne 0 ]];then
-    echo "php compile failure"
+    log_error "PHP compilation failed."
     exit 1
 fi
 
@@ -94,8 +97,9 @@ fi
 make  && make install
 
 if [[ "$?" -ne 0 ]];then
-    echo "php install failure "
+    log_error "PHP compilation failed."
     exit 1
 fi
 
+log_success "PHP install success."
 
