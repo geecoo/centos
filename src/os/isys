@@ -18,6 +18,7 @@ rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7
 
 # Install all packages
 LIST_PACKS=(
+ntp \
 wget \
 unzip \
 bzip2 \
@@ -124,14 +125,15 @@ yum install -y ntpdate
 # Set ntpdate
 # https://www.ntppool.org/zh/use.html
 #awk '$0~/cn.poll.ntp.org/' /etc/ntp/step-tickers
-grep 'cn.poll.ntp.org' /etc/ntp/step-tickers
-if [ "$?" -neq 0 ];then
-    echo 'cn.poll.ntp.org' >> /etc/ntp/step-tickers
+local file_step_tickers=/etc/ntp/step-tickers
+grep 'cn.poll.ntp.org' ${file_step_tickers}
+if [ "$?" -ne 0 -a -f "$file_step_tickers" ];then
+    echo 'cn.poll.ntp.org' >> ${file_step_tickers}
 fi
 
 sed -i 's/^SYNC_HWCLOCK=no/SYNC_HWCLOCK=yes/' /etc/sysconfig/ntpdate   
-systemctl status ntpdate
-systemctl enable ntpdate
-systemctl start ntpdate
+systemctl status ntpd
+systemctl enable ntpd
+systemctl start  ntpd
 
 

@@ -126,6 +126,14 @@ __empty() {
     return 1
 }
 
+__now_date_time() {
+    echo $(date '+ %F %T');
+}
+
+__localIP() {
+    echo $(/usr/sbin/ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/' | cut -f1,2,3,4 -d .)
+}
+
 #yaxios "gearman-1.1.2.tgz" http://pecl.php.net/get/gearman-1.1.2.tgz
 #log_success "HELLO WORLD"
 #echo $[ ${LOGGER_REPORTING} & ${LOGGER_MAIL} ] 
