@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 argsparser() {
-    ARGS=`getopt -a -o d:m:P:I:D:h -l do:,module:,params:instence:,database:,help -- "$@"`
+    ARGS=`getopt -a -o d:m:P:I:D:hy -l do:,module:,params:instence:,database:,help -- "$@"`
     
     [ $? -ne 0 ] && usage
 
@@ -12,6 +12,10 @@ argsparser() {
     while true
     do
     case "$1" in
+         -y)
+            # 同意
+            REPLY_YES=1
+            ;;
          -d|--do)
             DO="$2"
             shift

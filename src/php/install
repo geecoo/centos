@@ -8,7 +8,7 @@ fi
     
 cd "${TAR_DIR}"
 
-if [ -d "$INSTALL_PREFIX/php"  ]
+if [[ -d "$INSTALL_PREFIX/php"  ]]
 then
     echo "PHP is already installed."
     exit 0
@@ -16,7 +16,7 @@ fi
 
 S_VER_NAME="php-7.2.9.tar.gz"
 
-if [ ! -f "$S_VER_NAME" ];then 
+if [[ ! -f "$S_VER_NAME" ]];then 
     wget --no-check-certificate -O "$S_VER_NAME" http://cn2.php.net/get/"$S_VER_NAME"/from/this/mirror
 fi
 
@@ -29,7 +29,7 @@ if [[ "$?" -ne 0 ]];then
     exit 1
 fi
 
-./configure --prefix=/usr/local/php \
+./configure --prefix="$INSTALL_PREFIX/php" \
 --with-curl \
 --with-freetype-dir \
 --with-gd \

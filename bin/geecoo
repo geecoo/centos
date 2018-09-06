@@ -60,6 +60,7 @@ fi
 
 echo "MODULE_DIR :" ${MODULE_DIR}
 echo "DO_SCRIPT:" ${DO_SCRIPT}
+echo "REPLY_YES:" ${REPLY_YES}
 
 time . ${DO_SCRIPT}
 
