@@ -8,6 +8,7 @@ ROOT_DIR=$(dirname $BIN_DIR)
 CONF_DIR="$ROOT_DIR/conf"
 LOG_DIR="$ROOT_DIR/log"
 SRC_DIR="$ROOT_DIR/src"
+TAR_DIR="$ROOT_DIR/storage/tar"
 
 # load config
 . ${CONF_DIR}/*
@@ -19,27 +20,46 @@ SRC_DIR="$ROOT_DIR/src"
 
 ################   Bootstrap loaded completed. ######################
 
-# entity action 
+# MODULE        模块名
+# MODULE_DIR    模块路径
+# DO            执行体名
+# DO_SCRIPT     执行体路径
+
 ## 解析参数 ##
 argsparser $@
 
-if [ ! "$caller" ];then
-    __echo_warning "The calling program could not be found." 
+## 解析不到， 进入交互系统
+
+if [ ! "$MODULE" ];then
+    __echo_warning "The param '-m | --module' could not be found." 
     exit 1
 fi
 
-caller_abs_path=`finder ${caller}`
+if [ ! "$DO" ];then
+    __echo_warning "The param '-d | --do' could not be found." 
+    exit 1
+fi
 
-if [ ! -f "$caller_abs_path" ];then
-    __echo_warning "Caller '${caller}' path not found." 
+MODULE_DIR=$(find ${SRC_DIR}  -maxdepth 1 -type d -name ${MODULE})
+
+if [ ! "$MODULE_DIR" ];then
+    __echo_warning "The module '$MODULE' could not be found." 
+    exit 1
+fi
+
+
+DO_SCRIPT=$(find ${MODULE_DIR} -type f -name ${DO})
+
+if [ ! "$DO_SCRIPT" ];then
+    __echo_warning "The do scirpt '$DO' could not be found." 
     exit 1
 fi
 
 #echo "$@"
 #exec ${caller_abs_path} "$@" 
 
-echo "Caller :" ${caller}
-echo "Invoking:" ${invoking}
-echo "Params:" ${params}
+echo "MODULE_DIR :" ${MODULE_DIR}
+echo "DO_SCRIPT:" ${DO_SCRIPT}
 
-time . ${caller_abs_path}
+time . ${DO_SCRIPT}
+

@@ -9,7 +9,7 @@ rm -f "$DISK_LOG"
 for r in `df -h |awk -F '[ %]+' '{print $5}'|grep -v Use|grep -v 已用`
 do
     # Log if the partition rate is greater than 90
-    if [ $r -gt 10 ];then
+    if [ $r -gt 90 ];then
         printf "[ %s ] %s disk usage is $r%% \n"  "$(__now_date_time)" "$(__localIP)"  >> "$DISK_LOG"
     fi
 done

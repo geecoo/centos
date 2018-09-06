@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
 
 argsparser() {
-    if [ "$#" -eq 1 ];then
-        caller="$1"
-        return 0
-    fi
-
-    ARGS=`getopt -a -o c:m:P:I:D:h -l caller:,method:,params:instence:,database:,help -- "$@"`
+    ARGS=`getopt -a -o d:m:P:I:D:h -l do:,module:,params:instence:,database:,help -- "$@"`
     
     [ $? -ne 0 ] && usage
 
@@ -17,12 +12,12 @@ argsparser() {
     while true
     do
     case "$1" in
-         -c|--caller)
-            caller="$2"
+         -d|--do)
+            DO="$2"
             shift
             ;;
-         -m|--method)
-            invoking="$2"
+         -m|--module)
+            MODULE="$2"
             shift
             ;;
         -P)
@@ -61,8 +56,7 @@ finder() {
 
     log_info "Looking for command '${caller}' path." 
 
-    path=$(find ${ROOT_DIR} -name ${caller})
-
+    path=$(find ${ROOT_DIR} -type f -name ${caller})
     if [ ! "$path" ];then 
         log_info "Caller '${caller}' path not found." 
         exit 0
