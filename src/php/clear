@@ -1,0 +1,12 @@
+#!/bin/bash
+
+clear_all_version() {
+    for i in $(rpm -qa | grep php)
+    do
+        if [ -z "$i" ];then
+            echo "$i"
+        fi
+    done
+}
+
+`clear_all_version`
