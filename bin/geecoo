@@ -17,6 +17,7 @@ TAR_DIR="$ROOT_DIR/storage/tar"
 . /etc/init.d/functions
 . "$SRC_DIR/framework/lib/functions" 
 . "$SRC_DIR/framework/lib/argsparser" 
+. "$SRC_DIR/framework/interactive" 
 
 ################   Bootstrap loaded completed. ######################
 
@@ -27,6 +28,9 @@ TAR_DIR="$ROOT_DIR/storage/tar"
 
 ## 解析参数 ##
 argsparser $@
+
+bootstrap_interactive
+exit 0
 
 ## 解析不到， 进入交互系统
 
@@ -61,6 +65,7 @@ fi
 echo "MODULE_DIR :" ${MODULE_DIR}
 echo "DO_SCRIPT:" ${DO_SCRIPT}
 echo "REPLY_YES:" ${REPLY_YES}
+echo "FORCE:" ${FORCE}
 
 time . ${DO_SCRIPT}
 

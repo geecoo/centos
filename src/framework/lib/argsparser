@@ -69,3 +69,20 @@ finder() {
     /bin/echo -nE "$path"
     return 0
 }
+
+finder_src() {
+    local caller="$1"
+    local path
+
+    log_info "Looking for command '${caller}' path." 
+
+    path=$(find ${SRC_DIR} -type f -name ${caller})
+
+    if [ ! "$path" ];then 
+        log_info "Caller '${caller}' path not found." 
+        exit 0
+    fi
+
+    /bin/echo -nE "$path"
+    return 0
+}

@@ -1,0 +1,81 @@
+#!/usr/bin/bash
+
+# 流程引导交互
+bootstrap_interactive() {
+    local iinput
+    local argv_count
+    local search_arr
+
+    while true
+    do
+        Usage
+
+        read -p "Please enter command > "
+        iinput="$REPLY" 
+
+        # 分析用户输入的东西
+
+        arr=($(split_command "$iinput"))
+        argv_count=${#arr[@]}
+
+        if [ "$argv_count" -eq 1 ]; then
+            search_command "${iinput}" 
+        else
+            multi_command  "${iinput}"
+        fi
+
+    done
+
+}
+
+split_command() {
+    local iinput="$1"
+    iinput=${iinput//,/  }
+    iinput=${iinput//:/  }
+    echo "$iinput"
+}
+
+search_command() {
+    local iinput="$1"
+    local cnt=0
+    search_arr=($(finder_src ${iinput}))
+
+    if [ ! "$search_arr" ]; then
+        echo -ne "No result."
+        return 1
+    fi
+
+    if [ "$search_arr" -a "${#search_arr[@]}" -gt 0 ]; then
+
+        for i in ${search_arr[@]}  
+        do  
+            cnt=$((cnt+1))
+            echo "$cnt: $i"  
+        done 
+
+        read -p "Please choice number > "
+
+        if [ "$REPLY" ]; then
+            echo "执行: $REPLY"
+        fi
+
+    fi
+
+    return 0
+}
+
+multi_command() {
+    local iinput="$1"
+    local arr
+
+    arr=($(split_command "$iinput"))
+
+    MODULE="${arr[0]}"
+    DO="${arr[1]}"
+    RUN="${arr[2]}"
+
+    echo "$MODULE"
+    echo "$DO"
+    echo "$RUN"
+}
+

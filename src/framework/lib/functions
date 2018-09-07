@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-usage() {
-    echo -ne "\r"
+Usage() {
     echo -ne "Usage"
-    echo -ne "\r"
+    echo ""
 }
 
 # Capture terminated singal
