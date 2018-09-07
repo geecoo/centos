@@ -82,7 +82,9 @@ ctags \
 yum-axelget \
 mcrypt \
 libmcrypt \
-libmcrypt-devel
+libmcrypt-devel\
+libxslt \
+libxslt-devel
 )
 
 for packagename in "${LIST_PACKS[@]}"
