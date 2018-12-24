@@ -72,9 +72,17 @@ echo "export PATH=/usr/local/nginx/sbin:\$PATH" > /etc/profile.d/nginx.sh
 .  /etc/profile.d/nginx.sh
 
 # init.d script
-if [ -f "$SRC_DIR/nginx/init.d_nginx.sh" ];then
+if [ -f "$SRC_DIR/nginx/init.d_nginx.sh" ];
+then
     cp $SRC_DIR/nginx/init.d_nginx.sh /etc/init.d/nginx
     chmod +x /etc/init.d/nginx
     /etc/init.d/nginx -h
 fi
 
+# default conf
+if [ -d "$SRC_DIR/nginx/example-conf" ];
+then
+    mkdir -p $INSTALL_PREFIX/nginx/conf.d
+    /usr/bin/cp -af $SRC_DIR/nginx/example-conf/conf.d/example.conf $INSTALL_PREFIX/nginx/conf.d/example.conf
+    /usr/bin/cp -f $SRC_DIR/nginx/example-conf/conf/nginx.conf $INSTALL_PREFIX/nginx/conf/nginx.conf
+fi
