@@ -1,0 +1,21 @@
+#!/bin/bash
+
+
+MODULE_ROOT_DIR=$(dirname $BASH_SOURCE)
+
+if [ -z "$invoking" ]
+then
+    read -p "Enter one or more values > "
+    echo "REPLY = '$REPLY'"
+fi
+
+
+if [ "$(type -t $invoking)" = "function" ]
+then
+    echo "$invoking is exists"
+elif [ -f "$MODULE_ROOT_DIR/$invoking" ]
+then
+    . "$MODULE_ROOT_DIR/$invoking"
+fi
+
+

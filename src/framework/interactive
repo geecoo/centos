@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 
+
 # 流程引导交互
 bootstrap_interactive() {
     local iinput
@@ -8,10 +9,10 @@ bootstrap_interactive() {
 
     while true
     do
-        Usage
-
         read -p "Please enter command > "
         iinput="$REPLY" 
+
+        params_filter "$iinput"
 
         # 分析用户输入的东西
 
@@ -22,8 +23,11 @@ bootstrap_interactive() {
             search_command "${iinput}" 
         else
             multi_command  "${iinput}"
-        fi
 
+            # 调用执行脚本
+            invoker
+        fi
+        
     done
 
 }
@@ -38,10 +42,11 @@ split_command() {
 search_command() {
     local iinput="$1"
     local cnt=0
+
     search_arr=($(finder_src ${iinput}))
 
     if [ ! "$search_arr" ]; then
-        echo -ne "No result."
+        echo -ne "No found script ($1)."
         return 1
     fi
 
@@ -55,10 +60,15 @@ search_command() {
 
         read -p "Please choice number > "
 
-        if [ "$REPLY" ]; then
-            echo "执行: $REPLY"
-        fi
+        params_filter "$REPLY"
 
+        if [[ "$REPLY" && ${search_arr[$(($REPLY-1))]} ]]; then
+            echo "Start execute the script: ${search_arr[$(($REPLY-1))]}"
+            #time . ${search_arr[$(($REPLY-1))]}
+            echo "Finished execute the script: ${search_arr[$(($REPLY-1))]}"
+        else
+            echo "Please enter the correct script number..."
+        fi
     fi
 
     return 0
@@ -70,12 +80,12 @@ multi_command() {
 
     arr=($(split_command "$iinput"))
 
-    MODULE="${arr[0]}"
-    DO="${arr[1]}"
-    RUN="${arr[2]}"
+    COO_MODULE="${arr[0]}"
+    COO_DO="${arr[1]}"
+    COO_INVOKE="${arr[2]}"
 
-    echo "$MODULE"
-    echo "$DO"
-    echo "$RUN"
+    echo "模块: $COO_MODULE"
+    echo "实体: $COO_DO"
+    echo "方法: $COO_INVOKE"
 }
 

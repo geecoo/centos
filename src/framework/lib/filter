@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+function params_filter()
+{
+    local param="$1" 
+    local temp_param=`echo "$param" | tr '[a-z]' '[A-Z]'`
+
+    if [[ $temp_param == "QUIT" || $temp_param == 'Q' ]];
+    then
+        __echo_warning "Quit..."
+        exit 0
+    fi 
+}

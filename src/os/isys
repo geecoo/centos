@@ -10,11 +10,14 @@ yum install -y yum-plugin-fastestmirror
 yum clean all
 yum update -y
 
+sleep 2
 # Install all develop package
 # yum remove -y dhclient dhcp-*
 
 # Add epel 
 rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7-11.noarch.rpm
+
+sleep 2
 
 # Install all packages
 LIST_PACKS=(
@@ -90,7 +93,7 @@ libxslt-devel
 for packagename in "${LIST_PACKS[@]}"
 do
     yum install -y "$packagename"
-    usleep 256
+    usleep 512 
 done
 
 unset $LIST_PACKS

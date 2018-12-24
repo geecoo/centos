@@ -1,105 +1,125 @@
 #!/usr/bin/bash
 
-if [[ -z "$TAR_DIR" ]]
-then
-    TAR_DIR="$ROOT_DIR/storage/tar"
-    mkdir -p $TAR_DIR
-fi
-    
-cd "${TAR_DIR}"
+reinstall()
+{
+    echo "Nothing."
+}
 
-if [[ -d "$INSTALL_PREFIX/php"  ]]
-then
-    echo "PHP is already installed."
+install() {
+    echo "install ok."
     exit 0
-fi
+    if [[ -z "$TAR_DIR" ]]
+    then
+        TAR_DIR="$ROOT_DIR/storage/tar"
+        mkdir -p $TAR_DIR
+    fi
+     
+    cd "${TAR_DIR}"
 
-S_VER_NAME="php-7.2.9.tar.gz"
+    if [[ -d "$INSTALL_PREFIX/php"  ]]
+    then
+        echo "PHP is already installed."
+        exit 0
+    fi
 
-if [[ ! -f "$S_VER_NAME" ]];then 
-    wget --no-check-certificate -O "$S_VER_NAME" http://cn2.php.net/get/"$S_VER_NAME"/from/this/mirror
-fi
+    local VER_NAME="php-7.2.12.tar.gz"
 
-tar -xzvf "$S_VER_NAME" 
+    if [[ ! -f "$VER_NAME" ]];then 
+        wget --no-check-certificate -O "$VER_NAME" http://cn2.php.net/get/"$VER_NAME"/from/this/mirror
+    fi
 
-cd ${S_VER_NAME:0:(-7)}
+    tar -xzvf "$VER_NAME" 
 
-if [[ "$?" -ne 0 ]];then
-    echo "Not found directory '${S_VER_NAME:0:(-7)}'"
-    exit 1
-fi
+    cd ${VER_NAME:0:(-7)}
 
-./configure --prefix="$INSTALL_PREFIX/php" \
---with-curl \
---with-freetype-dir \
---with-gd \
---with-iconv-dir \
---with-kerberos \
---with-libdir=lib64 \
---with-libxml-dir=/usr \
---with-openssl \
---with-pcre-regex \
---with-pdo-mysql \
---with-pdo-sqlite \
---with-pear \
---with-png-dir \
---with-jpeg-dir \
---with-xmlrpc \
---with-xsl \
---with-zlib \
---with-bz2 \
---with-mhash \
---enable-fpm \
---enable-bcmath \
---enable-libxml \
---with-imap-ssl \
---with-mcrypt \
---enable-mbstring \
---enable-maintainer-zts \
---with-config-file-path=/etc \
---with-config-file-scan-dir=/etc/php.d \
---enable-mbstring \
---enable-xml \
---enable-sockets \
---enable-pcntl \
---enable-sysvmsg \
---enable-sysvshm \
---enable-shmop \
---enable-mysqlnd \
---enable-soap \
---enable-opcache \
---enable-zip \
---enable-sysvmsg \
---enable-sysvsem \
---enable-sysvshm \
---enable-shmop \
---enable-zend-multibyte \
---enable-ftp
+    if [[ "$?" -ne 0 ]];then
+        echo "Not found directory '${VER_NAME:0:(-7)}'"
+        exit 1
+    fi
 
-#--enable-dtrace
-# --disable-fileinfo
+    ./configure --prefix="$INSTALL_PREFIX/php" \
+    --with-curl \
+    --with-freetype-dir \
+    --with-gd \
+    --with-iconv-dir \
+    --with-kerberos \
+    --with-libdir=lib64 \
+    --with-libxml-dir=/usr \
+    --with-openssl \
+    --with-pcre-regex \
+    --with-pdo-mysql \
+    --with-pdo-sqlite \
+    --with-pear \
+    --with-png-dir \
+    --with-jpeg-dir \
+    --with-xmlrpc \
+    --with-xsl \
+    --with-zlib \
+    --with-bz2 \
+    --with-mhash \
+    --enable-fpm \
+    --enable-bcmath \
+    --enable-libxml \
+    --with-imap-ssl \
+    --with-mcrypt \
+    --enable-mbstring \
+    --enable-maintainer-zts \
+    --with-config-file-path=/etc \
+    --with-config-file-scan-dir=/etc/php.d \
+    --enable-mbstring \
+    --enable-xml \
+    --enable-sockets \
+    --enable-pcntl \
+    --enable-sysvmsg \
+    --enable-sysvshm \
+    --enable-shmop \
+    --enable-mysqlnd \
+    --enable-soap \
+    --enable-opcache \
+    --enable-zip \
+    --enable-sysvmsg \
+    --enable-sysvsem \
+    --enable-sysvshm \
+    --enable-shmop \
+    --enable-zend-multibyte \
+    --enable-ftp
 
-# 禁用传递其他运行库搜索路径
-#--disable-rpath 
+    #--enable-dtrace
+    # --disable-fileinfo
 
-# 禁止调试模式 
-# --disable-debug
+    # 禁用传递其他运行库搜索路径
+    #--disable-rpath 
 
-#  virtual memory exhausted: Cannot allocate memory
-#  add --disable-fileinfo
+    # 禁止调试模式 
+    # --disable-debug
 
-if [[ "$?" -ne 0 ]];then
-    log_error "PHP compilation failed."
-    exit 1
-fi
+    #  virtual memory exhausted: Cannot allocate memory
+    #  add --disable-fileinfo
+
+    if [[ "$?" -ne 0 ]];then
+        log_error "PHP compilation failed."
+        exit 1
+    fi
 
 
-make  && make install
+    make  && make install
 
-if [[ "$?" -ne 0 ]];then
-    log_error "PHP compilation failed."
-    exit 1
-fi
+    if [[ "$?" -ne 0 ]];then
+        log_error "PHP compilation failed."
+        exit 1
+    fi
 
-log_success "PHP install success."
+    log_success "PHP install success."
+}
 
+__COO_Init()
+{
+    if [[ ! -z "$COO_INVOKE" && "$(type -t $COO_INVOKE)" = "function" ]]
+    then
+        __echo_warning "Prepare invoke function ' ${COO_INVOKE} ' ." 
+        ${COO_INVOKE}
+    else
+        __echo_warning "No invoke function ' ${COO_INVOKE} ' In '$BASH_SOURCE'." 
+    fi
+}
+__COO_Init

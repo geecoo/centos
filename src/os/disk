@@ -1,6 +1,5 @@
 #! /bin/bash
 # Disk full send email
-
 DISK_LOG="$LOG_DIR"/disk.tmp
 rm -f "$DISK_LOG" 
 

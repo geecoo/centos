@@ -1,7 +1,27 @@
 #!/usr/bin/env bash
 Usage() {
-    echo -ne "Usage"
+    $SETCOLOR_SUCCESS
     echo ""
+    echo -e "Usage"
+    echo -e "   command [options] [arguments] ..."
+    echo ""
+    echo -e "Options:"
+    echo -e "   -m, --module                    The name of the module"
+    echo -e "   -d, --do                        The name of the script"
+    echo -e "   -i, --invoke                    The name of the method"
+    echo ""
+    echo -e "Interactive System:"
+    echo "PHP"
+    echo -e "   php:install:install              Install PHP"
+    echo -e "   php:clear                        Clear PHP"
+    echo ""
+    echo "Command Example:"
+    echo -e "bin/geecoo --module php --do install --invoke reinstall"
+    echo -e "bin/geecoo --module php --do clear"
+
+    
+    echo ""
+    $SETCOLOR_NORMAL
 }
 
 # Capture terminated singal
@@ -131,6 +151,31 @@ __now_date_time() {
 
 __localIP() {
     echo $(/usr/sbin/ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/' | cut -f1,2,3,4 -d .)
+}
+
+__detection_of_php_extensions() {
+    local ext_name="$1"
+    local already_install=1
+
+    list=$(/usr/local/php/bin/php -m | grep "$ext_name" | awk '{print $1}')
+
+    for v in $list
+    do
+        if [[ "$v"x == "$ext_name"x ]]
+        then
+            already_install=0
+            break
+        fi
+    done 
+    
+    if [ "$already_install" ]
+    then
+        __echo_warning "Already install extension 【 $ext_name 】."
+        exit 0
+        #read -p "Already install extension 【 $ext_name 】. Reinstall ？"
+    fi 
+
+    return $already_install
 }
 
 #yaxios "gearman-1.1.2.tgz" http://pecl.php.net/get/gearman-1.1.2.tgz

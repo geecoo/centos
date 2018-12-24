@@ -1,0 +1,42 @@
+#!/usr/bin/bash
+
+__detection_of_php_extensions 'swoole'
+
+if [[ "$?" -eq 0 ]];then
+    __echo_warning "Already install extension 【 swoole 】."
+    exit 0
+fi
+
+
+if [[ -z "$TAR_DIR" ]]
+then
+    TAR_DIR="$ROOT_DIR/storage/tar"
+    mkdir -p $TAR_DIR
+fi
+
+cd "${TAR_DIR}"
+
+if [[ ! -f "swoole-4.2.8.tgz" ]];then
+    #wget -O swoole-4.2.8-stable.tar.gz https://github.com/swoole/swoole-src/archive/swoole-4.2.8-stable.tar.gz
+    wget -O swoole-4.2.8.tgz http://pecl.php.net/get/swoole-4.2.8.tgz
+fi
+
+tar -xzvf swoole-4.2.8.tgz
+
+cd swoole-4.2.8
+
+if [[ "$?" -ne 0 ]];then
+    __echo_warning "Not found directory swoole-4.2.8"
+    exit 1
+fi
+
+/usr/local/php/bin/phpize
+
+./configure --with-php-config=/usr/local/php/bin/php-config
+
+make && make install
+
+if [[ "$?" -eq 0 ]];then
+    echo "extension=swoole.so" >> /etc/php.ini
+    __echo_success "Swoole install success"
+fi

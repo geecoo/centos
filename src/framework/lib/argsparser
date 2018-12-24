@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 argsparser() {
-    ARGS=`getopt -a -o d:m:P:I:D:hy -l do:,module:,params:instence:,database:,help -- "$@"`
+    ARGS=`getopt -a -o i:d:m:P:I:D:hy -l invoke:,do:,module:,params:instence:,database:,help -- "$@"`
     
-    [ $? -ne 0 ] && usage
+    [ $? -ne 0 ] && Usage
 
     #set -- "${ARGS}"
     # 防止参数中有shell命令，被错误的扩展
@@ -17,11 +17,15 @@ argsparser() {
             REPLY_YES=1
             ;;
          -d|--do)
-            DO="$2"
+            COO_DO="$2"
+            shift
+            ;;
+         -i|--invoke)
+            COO_INVOKE="$2"
             shift
             ;;
          -m|--module)
-            MODULE="$2"
+            COO_MODULE="$2"
             shift
             ;;
         -P)
@@ -37,7 +41,8 @@ argsparser() {
             shift
             ;;
         -h|--help)
-            usage
+            Usage
+            exit 0
             ;;
         --)
             shift

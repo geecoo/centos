@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+function invoker()
+{
+    if [ ! "$COO_MODULE" ];then
+        __echo_warning "The param '-m | --module' could not be found." 
+        return 1
+    fi
+
+    if [ ! "$COO_DO" ];then
+        __echo_warning "The param '-d | --do' could not be found." 
+        return 1
+    fi
+
+    COO_MODULE_DIR=$(find ${SRC_DIR}  -maxdepth 1 -type d -name ${COO_MODULE})
+
+    if [ ! "$COO_MODULE_DIR" ];then
+        __echo_warning "The module '$COO_MODULE' could not be found." 
+        return 1
+    fi
+
+
+    COO_DO_SCRIPT=$(find ${COO_MODULE_DIR} -type f -name ${COO_DO})
+
+    if [ ! "$COO_DO_SCRIPT" ];then
+        __echo_warning "The do scirpt '$COO_DO' could not be found." 
+        return 1
+    fi
+
+    echo "COO_MODULE_DIR :" ${COO_MODULE_DIR}
+    echo "COO_DO_SCRIPT:" ${COO_DO_SCRIPT}
+    echo "COO_INVOKE:" ${COO_INVOKE}
+
+    echo "REPLY_YES:" ${REPLY_YES}
+    echo "FORCE:" ${FORCE}
+
+    time . ${COO_DO_SCRIPT}
+    
+    [[ "$?" -ne 0 ]] && return 1 || return 0
+}

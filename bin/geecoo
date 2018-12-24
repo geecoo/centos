@@ -17,55 +17,36 @@ TAR_DIR="$ROOT_DIR/storage/tar"
 . /etc/init.d/functions
 . "$SRC_DIR/framework/lib/functions" 
 . "$SRC_DIR/framework/lib/argsparser" 
+. "$SRC_DIR/framework/lib/filter" 
 . "$SRC_DIR/framework/interactive" 
+. "$SRC_DIR/framework/lib/cooclt" 
 
 ################   Bootstrap loaded completed. ######################
 
-# MODULE        模块名
-# MODULE_DIR    模块路径
-# DO            执行体名
-# DO_SCRIPT     执行体路径
+# COO_MODULE        模块名
+# COO_MODULE_DIR    模块路径
+# COO_DO            执行体名
+# COO_DO_SCRIPT     执行体路径
 
 ## 解析参数 ##
 argsparser $@
 
-bootstrap_interactive
-exit 0
-
 ## 解析不到， 进入交互系统
 
-if [ ! "$MODULE" ];then
+if [ ! "$COO_MODULE" ];then
     __echo_warning "The param '-m | --module' could not be found." 
-    exit 1
+
+    __echo_warning "Automatically into the interactive system." 
+
+    bootstrap_interactive
 fi
 
-if [ ! "$DO" ];then
-    __echo_warning "The param '-d | --do' could not be found." 
-    exit 1
+invoker
+
+if [[ "$?" -ne 0 ]]
+then
+    __echo_warning "Script invoker failed." 
+    exit 0
 fi
 
-MODULE_DIR=$(find ${SRC_DIR}  -maxdepth 1 -type d -name ${MODULE})
-
-if [ ! "$MODULE_DIR" ];then
-    __echo_warning "The module '$MODULE' could not be found." 
-    exit 1
-fi
-
-
-DO_SCRIPT=$(find ${MODULE_DIR} -type f -name ${DO})
-
-if [ ! "$DO_SCRIPT" ];then
-    __echo_warning "The do scirpt '$DO' could not be found." 
-    exit 1
-fi
-
-#echo "$@"
-#exec ${caller_abs_path} "$@" 
-
-echo "MODULE_DIR :" ${MODULE_DIR}
-echo "DO_SCRIPT:" ${DO_SCRIPT}
-echo "REPLY_YES:" ${REPLY_YES}
-echo "FORCE:" ${FORCE}
-
-time . ${DO_SCRIPT}
-
+__echo_success "Script invoker success." 
