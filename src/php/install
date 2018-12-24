@@ -6,8 +6,6 @@ reinstall()
 }
 
 install() {
-    echo "install ok."
-    exit 0
     if [[ -z "$TAR_DIR" ]]
     then
         TAR_DIR="$ROOT_DIR/storage/tar"

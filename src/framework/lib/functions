@@ -178,6 +178,17 @@ __detection_of_php_extensions() {
     return $already_install
 }
 
+__make_and_cd_tar_dir()
+{
+    if [[ -z "$TAR_DIR" ]]
+    then
+        TAR_DIR="$ROOT_DIR/storage/tar"
+        mkdir -p $TAR_DIR
+    fi
+
+    cd "${TAR_DIR}"
+}
+
 #yaxios "gearman-1.1.2.tgz" http://pecl.php.net/get/gearman-1.1.2.tgz
 #log_success "HELLO WORLD"
 #echo $[ ${LOGGER_REPORTING} & ${LOGGER_MAIL} ] 

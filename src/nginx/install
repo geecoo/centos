@@ -1,0 +1,81 @@
+#!/bin/bash
+
+# Checks whether nginx is installed 
+if [[ -d "$INSTALL_PREFIX/nginx"  ]]
+then
+    read -p "Nginx is already installed. Reinstall now ?"
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        rm -fr "$INSTALL_PREFIX/nginx" 
+        rm -fr "/etc/init.d/nginx"
+    else
+        exit 0
+    fi
+fi
+
+# download directory
+if [ "$(type -t __make_and_cd_tar_dir)" = "function" ] ; then
+    __make_and_cd_tar_dir
+fi
+
+
+VER_NAME="nginx-1.15.7.tar.gz"
+if [ ! -f "$VER_NAME" ];then 
+    wget --no-check-certificate -O  "$VER_NAME" http://nginx.org/download/"$VER_NAME" 
+fi
+
+tar -xzvf "$VER_NAME" && cd ${VER_NAME:0:(-7)}
+
+if [[ "$?" -ne 0 ]];then
+    echo "Not found directory ${VER_NAME:0:(-7)}"
+    exit 1
+fi
+
+
+groupadd www
+useradd -g www -s /bin/false -M www
+
+./configure \
+    --user=www \
+    --group=www \
+    --error-log-path=/var/log/nginx/error.log \
+    --http-log-path=/var/log/nginx/access.log \
+    --prefix=/usr/local/nginx \
+    --pid-path=/var/run/nginx.pid \
+    --lock-path=/var/lock/nginx.lock \
+    --with-http_ssl_module \
+    --with-http_dav_module \
+    --with-http_flv_module \
+    --with-http_realip_module \
+    --with-http_gzip_static_module \
+    --with-http_stub_status_module \
+    --with-mail \
+    --with-mail_ssl_module \
+    --http-client-body-temp-path=/var/tmp/nginx/client \
+    --http-proxy-temp-path=/var/tmp/nginx/proxy \
+    --http-fastcgi-temp-path=/var/tmp/nginx/fastcgi \
+    --http-uwsgi-temp-path=/var/tmp/nginx/uwsgi \
+    --http-scgi-temp-path=/var/tmp/nginx/scgi
+
+#--with-pcre=../pcre-8.37 \
+#--with-zlib=../zlib-1.2.8 \
+#--with-debug \
+make && make install
+
+if [[ "$?" -ne 0 ]];then
+    log_error "Nginx compilation failed."
+    exit 1
+fi
+
+log_success "Nginx install success."
+
+echo "export PATH=/usr/local/nginx/sbin:\$PATH" > /etc/profile.d/nginx.sh
+    
+.  /etc/profile.d/nginx.sh
+
+# init.d script
+if [ -f "$SRC_DIR/nginx/init.d_nginx.sh" ];then
+    cp $SRC_DIR/nginx/init.d_nginx.sh /etc/init.d/nginx
+    chmod +x /etc/init.d/nginx
+    /etc/init.d/nginx -h
+fi
+

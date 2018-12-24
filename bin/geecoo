@@ -36,7 +36,7 @@ argsparser $@
 if [ ! "$COO_MODULE" ];then
     __echo_warning "The param '-m | --module' could not be found." 
 
-    __echo_warning "Automatically into the interactive system." 
+    __echo_warning "Automatically entered into the interactive system." 
 
     bootstrap_interactive
 fi
