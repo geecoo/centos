@@ -17,7 +17,6 @@ if [ "$(type -t __make_and_cd_tar_dir)" = "function" ] ; then
     __make_and_cd_tar_dir
 fi
 
-
 VER_NAME="nginx-1.15.7.tar.gz"
 if [ ! -f "$VER_NAME" ];then 
     wget --no-check-certificate -O  "$VER_NAME" http://nginx.org/download/"$VER_NAME" 

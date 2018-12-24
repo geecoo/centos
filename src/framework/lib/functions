@@ -183,6 +183,10 @@ __make_and_cd_tar_dir()
     if [[ -z "$TAR_DIR" ]]
     then
         TAR_DIR="$ROOT_DIR/storage/tar"
+    fi
+
+    if [[ ! -d $TAR_DIR ]]
+    then
         mkdir -p $TAR_DIR
     fi
 

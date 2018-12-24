@@ -36,5 +36,5 @@ function invoker()
 
     time . ${COO_DO_SCRIPT}
     
-    [[ "$?" -ne 0 ]] && return 1 || return 0
+    return "$?" 
 }
