@@ -1,0 +1,67 @@
+#! /bin/bash
+
+if_arr=($(ls /sys/class/net))
+
+if [ "$if_arr" -a "${#if_arr[@]}" -gt 0 ]; then
+    for i in ${if_arr[@]}  
+    do  
+        cnt=$((cnt+1))
+        echo "$cnt: $i"  
+    done 
+fi
+
+read -p "Please choice number > "
+
+#params_filter "$REPLY"
+
+ifcfg_file="/etc/sysconfig/network-scripts/ifcfg-${if_arr[$(($REPLY-1))]}"  
+
+if [ ! -e "${ifcfg_file}" ]
+then
+    echo "Not found ifcfg => ${ifcfg_file}."
+    exit 0
+fi
+
+I_IPADDR=$(/usr/sbin/ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/' | cut -f1,2,3,4 -d .)
+
+
+I_NAME=$(grep -r NAME ${ifcfg_file} | awk -F= '{print $2}')
+I_UUID=$(grep -r UUID ${ifcfg_file} | awk -F= '{print $2}')
+I_HWADDR=$(grep -r HWADDR ${ifcfg_file} | cut -d "=" -f2)
+I_DEVICE=$(grep -r DEVICE ${ifcfg_file} | cut -d "=" -f2)
+
+# Back up the original configuration
+/usr/bin/cp -f $ifcfg_file /home/ 
+
+# Override configuration
+cat <<CFGEOF > /tmp/1.ifg
+TYPE=Ethernet
+BOOTPROTO=static
+#BOOTPROTO=dhcp
+DEFROUTE=yes
+PEERDNS=yes
+PEERROUTES=yes
+IPV4_FAILURE_FATAL=no
+IPV6INIT=no
+IPV6_AUTOCONF=yes
+IPV6_DEFROUTE=yes
+IPV6_PEERROUTES=yes
+IPV6_FAILURE_FATAL=yes
+
+NAME=${I_NAME}
+UUID=${I_UUID}
+DEVICE=${I_DEVICE}
+HWADDR=${I_HWADDR}
+
+IPADDR=${I_IPADDR}
+NETMASK=255.255.252.0
+NETWORK=10.88.1.0
+GATEWAY=10.88.0.1
+ONBOOT=yes
+
+DNS1=10.88.10.10
+DNS2=10.88.10.15
+DNS3=223.5.5.5
+CFGEOF
+
+ 
