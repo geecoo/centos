@@ -107,6 +107,7 @@ current_pwd=$(pwd)
 
 cd ${TAR_SRC}
 
+# cmake > 3.0 
 #wget https://libzip.org/download/libzip-1.5.0.tar.gz
 #tar -zxvf libzip-*
 #cd libzip*
