@@ -9,8 +9,6 @@ service network restart
 service network status
 ```
 
->如果是虚拟机， 选择桥接模式, 到这一步， 虚拟机已连通网络
-
 * 排查虚拟机无法联网、或重启后，网络不通
 ```
 VM 还原默认配置
