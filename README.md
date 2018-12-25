@@ -3,13 +3,33 @@
 
 ```
 vi /etc/sysconfig/network-scripts/ifcfg-eno16777736  (网卡配置文件可能不同)
-配置ip参考 os/ifcfg.sh
+配置ip参考脚本 src/os/ifcfg
 
 service network restart
 service network status
 ```
 
 >如果是虚拟机， 选择桥接模式, 到这一步， 虚拟机已连通网络
+
+* 排查虚拟机无法联网、或重启后，网络不通
+```
+VM 还原默认配置
+
+VM 虚拟网络编辑器 -> Vmnet0 -> 桥接模式， 勾选真实网卡
+
+网络适配器 -> 桥接模式 -> 勾选 '复制物理网络连接状态'
+(虚拟机删除网络适配器，重新添加一块新的)
+
+配置网卡 ifcfg-eth0
+(网关和DNS要设置正确)
+
+重启网卡 service network restart
+
+查看路由配置, 可清理掉，重启网卡，会自动生产新路由表
+(route -n) 
+
+重启虚拟机
+```
 
 * Usage
 > bin/geecoo -h
@@ -38,7 +58,7 @@ PlugStatus
 cd ~/.vim/bundle/Trinity/plugin && rm -f NERD_tree.vim
 ```
 
-* 安装Apache
+* 安装Apache [ 未开发 ]
 ```
 bin/geecoo --module httpd --do install 
 bin/geecoo --module httpd --do conf
@@ -49,7 +69,7 @@ bin/geecoo --module httpd --do conf
 bin/geecoo --module nginx --do install  (包含 nginx.conf 和 启动脚本)
 ```
 
-*  安装数据库percona
+*  安装数据库percona [ 未开发 ]
 ```  
 bin/geecoo --module percona --do install  
 ```
@@ -95,7 +115,7 @@ sh -x  xxx.sh   打印代码执行时的过程(执行顺序和结果)
 ```
 
 * Git 配置参考
-
+```
 配置文件存储： ~/.gitconfig
 
 git config --global user.name "geecoo"
@@ -118,6 +138,6 @@ git < verb > --help
 man git-< verb >
 
 < END Git >
-
+```
 
 
