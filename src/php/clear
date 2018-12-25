@@ -1,22 +1,14 @@
 #!/usr/bin/bash
 
 clear_all_version() {
-    echo "clear_all_version ok."
-    exit 0
-    for i in $(rpm -qa | grep php)
-    do
-        if [ -z "$i" ];then
-            echo -ne "Uninstall $i"
-            #rpm -e "$i"
-            [ "$?" -eq 0 ] && echo_success || echo_failure
-            echo ""
-        fi
-    done
+    rpm -e $(rpm -qa | grep php-cli)
+    rpm -e $(rpm -qa | grep php-devel)
+    rpm -e $(rpm -qa | grep php-common)
 
-    #rm -fr /usr/lib64/php/modules
-    #rm -fr /usr/local/php
-    #rm -fr /etc/init.d/php-fpm
-    #rm -f /etc/php.*
+    rm -fr /usr/lib64/php/modules
+    rm -fr /usr/local/php
+    rm -fr /etc/init.d/php-fpm
+    rm -fr /etc/php.*
 }
 
 clear_all_version

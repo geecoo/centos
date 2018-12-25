@@ -50,6 +50,7 @@ pcre \
 pcre-devel \
 openssl \
 openssl-devel \
+zlib \
 zlib-devel \
 php-devel \
 gd \
@@ -87,7 +88,7 @@ mcrypt \
 libmcrypt \
 libmcrypt-devel\
 libxslt \
-libxslt-devel
+libxslt-devel 
 )
 
 for packagename in "${LIST_PACKS[@]}"
@@ -100,6 +101,27 @@ unset $LIST_PACKS
 unset $packagename
 
 sleep 2
+
+
+current_pwd=$(pwd)
+
+cd ${TAR_SRC}
+
+#wget https://libzip.org/download/libzip-1.5.0.tar.gz
+#tar -zxvf libzip-*
+#cd libzip*
+#mkdir build && cd build && cmake .. && make && make install
+
+yum remove libzip -y
+wget https://nih.at/libzip/libzip-1.2.0.tar.gz
+tar -zxvf libzip-1.2.0.tar.gz
+cd libzip-1.2.0
+./configure
+make && make install
+
+ln -s /usr/local/lib/libzip/include/zipconf.h /usr/local/include
+
+cd $current_pwd
 
 #yum -y groupinstall "Development tools" "Server Platform Development"  
 
@@ -140,5 +162,11 @@ sed -i 's/^SYNC_HWCLOCK=no/SYNC_HWCLOCK=yes/' /etc/sysconfig/ntpdate
 systemctl status ntpd
 systemctl enable ntpd
 systemctl start  ntpd
+
+# 动态链接库
+echo '/usr/local/lib64
+/usr/local/lib
+/usr/lib
+/usr/lib64'>>/etc/ld.so.conf&&ldconfig -v
 
 
