@@ -38,3 +38,76 @@ function invoker()
     
     return "$?" 
 }
+
+function __geecoo_is_install()
+{
+    local INS_NAME="$1"
+    local INS_DIR="$INSTALL_PREFIX/$INS_NAME"
+     
+    if [[ -d "$INS_DIR"  ]]
+    then
+        read -p "$INS_NAME is already installed. Reinstall now ?"
+
+        if [[ $REPLY =~ ^[Nn]$ ]]
+        then
+            exit 0
+        fi
+    fi
+
+    return 0
+}
+
+__geecoo_install_wget()
+{
+    local VER_NAME="$1"
+    local VER_URL="$2"
+
+    # Storage directory
+    if [ "$(type -t __make_and_cd_tar_dir)" = "function" ] 
+    then
+        __make_and_cd_tar_dir
+    fi
+
+    if [[ ! -f "$VER_NAME" ]]
+    then
+        wget -O "$VER_NAME" "$VER_URL"
+    fi
+}
+
+__geecoo_install()
+{
+    local VER_NAME="$1"
+    local VER_URL="$2"
+
+    # Storage directory
+    if [ "$(type -t __make_and_cd_tar_dir)" = "function" ] 
+    then
+        __make_and_cd_tar_dir
+    fi
+
+    if [[ ! -f "$VER_NAME" ]]
+    then
+        wget -O "$VER_NAME" "$VER_URL"
+    fi
+
+    tar -xzvf "$VER_NAME" && cd ${VER_NAME:0:(-7)}
+
+    if [[ "$?" -ne 0 ]]
+    then
+        echo "Not found directory ${VER_NAME:0:(-7)}"
+        exit 0
+    fi
+
+    return 0
+}
+
+__geecoo_install_finished()
+{
+    if [[ "$?" -ne 0 ]]
+    then
+        log_error "$1 install failed."
+        exit 1
+    fi
+    
+    log_success "$1 install success."
+}

@@ -1,37 +1,18 @@
 #!/bin/bash
 
-# Checks whether nodejs is installed 
-VER_INS_DIR="$INSTALL_PREFIX/node"
-
-if [[ -d "$VER_INS_DIR"  ]]
-then
-    read -p "Nodejs is already installed. Reinstall now ?"
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        rm -fr "$VER_INS_DIR" 
-    else
-        exit 0
-    fi
-fi
-
-# download directory
-if [ "$(type -t __make_and_cd_tar_dir)" = "function" ] ; then
-    __make_and_cd_tar_dir
-fi
-
 VER_NAME="node-v9.9.0-linux-x64.tar.xz"
-if [ ! -f "$VER_NAME" ];then 
-    wget --no-check-certificate -O  "$VER_NAME" "https://nodejs.org/dist/v9.9.0/$VER_NAME"
-fi
+INS_NAME=$(echo $VER_NAME|cut -d "-" -f1)
+VER_INS_DIR="$INSTALL_PREFIX/$INS_NAME"
+
+# Checks whether node is installed 
+__geecoo_is_install $INS_NAME 
+
+__geecoo_install_wget "$VER_NAME" "https://nodejs.org/dist/v9.9.0/$VER_NAME" 
 
 tar -xvf "$VER_NAME" && mv  ${VER_NAME:0:(-7)} "$VER_INS_DIR"
 
-if [[ "$?" -ne 0 ]];then
-    log_error "Node install failed."
-    exit 1
-fi
+__geecoo_install_finished $INS_NAME
 
-log_success "Node install success."
-
-echo "export PATH=$VER_INS_DIR/bin:\$PATH" > /etc/profile.d/node.sh
-    
+echo "export PATH=$VER_INS_DIR/bin:\$PATH" > /etc/profile.d/$INS_NAME.sh
 .  /etc/profile.d/node.sh
+

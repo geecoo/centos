@@ -1,44 +1,20 @@
 #!/bin/bash
 
+VER_NAME="memcached-1.5.12.tar.gz"
+
 # Checks whether memcached is installed 
-VER_INS_DIR="$INSTALL_PREFIX/memcached"
-
-if [[ -d "$VER_INS_DIR"  ]]
-then
-    read -p "Memcached is already installed. Reinstall now ?"
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        rm -fr "$VER_INS_DIR" 
-    else
-        exit 0
-    fi
-fi
-
-# download directory
-if [ "$(type -t __make_and_cd_tar_dir)" = "function" ] 
-then
-    __make_and_cd_tar_dir
-fi
+__geecoo_is_install memcached 
 
 yum install -y libevent libevent-devel
 
-VER_NAME="memcached-1.5.12.tar.gz"
+__geecoo_install "$VER_NAME" "http://memcached.org/files/$VER_NAME" 
 
-if [[ ! -f "$VER_NAME" ]]
+if [[ "$?" -eq 0 ]]
 then
-    wget -O "$VER_NAME" "http://memcached.org/files/$VER_NAME"
+    ./configure --prefix=$VER_INS_DIR  --with-libevent=/usr
+
+    make && make install
 fi
-
-tar -xzvf "$VER_NAME" && cd ${VER_NAME:0:(-7)}
-
-if [[ "$?" -ne 0 ]]
-then
-    echo "Not found directory ${VER_NAME:0:(-7)}"
-    exit 1
-fi
-
-./configure --prefix=$VER_INS_DIR  --with-libevent=/usr
-
-make && make install
 
 if [[ "$?" -ne 0 ]]
 then

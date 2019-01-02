@@ -1,0 +1,52 @@
+#!/bin/zsh
+
+if [[ -d "$INSTALL_PREFIX/vim"  ]]
+then
+    read -p "Vim is already installed. Reinstall now ?"
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        rm -fr "$INSTALL_PREFIX/vim" 
+    else
+        exit 0
+    fi
+fi
+
+# Tar directory
+if [ "$(type -t __make_and_cd_tar_dir)" = "function" ] ; then
+    __make_and_cd_tar_dir
+fi
+
+# Depends on
+yum install -y gcc libX11-devel libXtst-devel ncurses-devel perl-ExtUtils-Embed ruby ruby-devel python-devel gtk2-devel libXt-devel
+
+if [ ! -f "vim-8.1.tar.bz2" ] || [ ! -f "vim-8.1.tar" ];then
+    wget -O vim-8.1.tar.bz2 ftp://ftp.vim.org/pub/vim/unix/vim-8.1.tar.bz2
+    bzip2 -d vim-8.1.tar.bz2
+fi
+
+# Import
+if [ -f "/usr/bin/xsubpp" ] && [ ! -f "/usr/share/perl5/ExtUtils/xsubpp" ];then
+    ln -s /usr/bin/xsubpp /usr/share/perl5/ExtUtils/xsubpp
+fi
+
+tar -xf vim-8.1.tar
+
+cd vim81
+
+./configure \
+--with-features=huge \
+--enable-rubyinterp \
+--enable-pythoninterp \
+--enable-multibyte \
+--with-python-config-dir=/usr/lib/python2.7/config/ \
+--enable-perlinterp \
+--enable-gui=gtk2 \
+--enable-cscope \
+--prefix=/usr \
+--enable-luainterp \
+--enable-multibyte \
+--disable-selinux
+
+make VIMRUNTIMEDIR=/usr/share/vim/vim81 && make install
+
+__geecoo_install_finished vim

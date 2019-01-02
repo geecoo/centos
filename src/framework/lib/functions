@@ -15,9 +15,20 @@ Usage() {
     echo -e "   php:install:install              Install PHP"
     echo -e "   php:clear                        Clear PHP"
     echo ""
-    echo "Command Example:"
+    echo "Available commands:"
+    echo ""
     echo -e "bin/geecoo --module php --do install --invoke reinstall"
     echo -e "bin/geecoo --module php --do clear"
+
+    echo ""
+    echo -e "bin/geecoo --module os  --do isys"
+    echo -e "bin/geecoo --module os  --do samba"
+    echo -e "bin/geecoo --module os  --do memcached"
+
+    echo ""
+    echo -e "bin/geecoo --module node   --do install"
+    echo -e "bin/geecoo --module nginx  --do install"
+    echo -e "bin/geecoo --module mysql  --do install"
 
     
     echo ""

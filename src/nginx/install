@@ -68,7 +68,6 @@ fi
 log_success "Nginx install success."
 
 echo "export PATH=/usr/local/nginx/sbin:\$PATH" > /etc/profile.d/nginx.sh
-    
 .  /etc/profile.d/nginx.sh
 
 # init.d script
