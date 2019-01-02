@@ -1,0 +1,198 @@
+#!/usr/bin/env bash
+Usage() {
+    $SETCOLOR_SUCCESS
+    echo ""
+    echo -e "Usage"
+    echo -e "   command [options] [arguments] ..."
+    echo ""
+    echo -e "Options:"
+    echo -e "   -m, --module                    The name of the module"
+    echo -e "   -d, --do                        The name of the script"
+    echo -e "   -i, --invoke                    The name of the method"
+    echo ""
+    echo -e "Interactive System:"
+    echo "PHP"
+    echo -e "   php:install:install              Install PHP"
+    echo -e "   php:clear                        Clear PHP"
+    echo ""
+    echo "Command Example:"
+    echo -e "bin/geecoo --module php --do install --invoke reinstall"
+    echo -e "bin/geecoo --module php --do clear"
+
+    
+    echo ""
+    $SETCOLOR_NORMAL
+}
+
+# Capture terminated singal
+signal_exit() {
+    echo -ne "\r"
+    echo "Terminated By Ctrl + c. Bye..."
+    exit 0
+}
+
+trap "signal_exit" TERM INT HUP
+
+# A function to download 
+yaxios() {
+    local filename=$1
+    local remote_addr=$2
+
+    if [ "$#" -ne 2 ];then
+
+        log_error  "Usage: $0 <filename> <remote_addr>"
+
+    elif [ -f  ./$1 ];then
+
+        log_info  "File ${filename} already exist"
+
+    else
+
+        log_info "Downloading ${remote_addr}  saved as ${filename}" 
+
+        wget --no-check-certificate -O ${filename} ${remote_addr}
+        
+        if [[ "$?" -ne 0 ]];then 
+            log_error "${filename} downloaded failed" && kill -9 $$ 
+        else
+            log_success "${filename} downloaded successfully" 
+        fi 
+    fi
+}
+
+log_success() {
+    local message=$1
+    local log_file=$2
+
+    if [ $[ ${LOGGER_REPORTING} & ${LOGGER_ECHO} ] ];then
+        __echo_success "${message}"
+    fi 
+    
+    echo $(date '+ %F %T')': ' "$message" >> $(__log_file)
+    echo -ne "\r"
+
+    return 0
+}
+
+log_error() {
+    local message=$1
+    local log_file=$2
+
+    if [ $[ ${LOGGER_REPORTING} & ${LOGGER_ECHO} ] ];then
+        __echo_failure "${message}"
+    fi 
+    
+    echo $(date)': ' "$message" >> $(__log_file)
+
+    return 0
+}
+
+log_info() {
+    local message=$1
+    local log_file=$2
+
+    #if [ $[ ${LOGGER_REPORTING} & ${LOGGER_ECHO} ] ];then
+        #__echo_warning "${message}"
+    #fi 
+    
+    echo $(date)': ' "$message" >> $(__log_file)
+    #echo -ne "\r"
+
+    return 0
+}
+
+
+__log_file()
+{
+    echo ${APP_LOG}
+}
+
+__echo_success() {
+    echo -n "[  "
+    $SETCOLOR_SUCCESS
+    echo -n $1
+    $SETCOLOR_NORMAL
+    echo -n "  ]"
+    echo "" 
+    return 0
+}
+
+__echo_failure() {
+    echo -n "[  "
+    $SETCOLOR_FAILURE
+    echo -n $1
+    $SETCOLOR_NORMAL
+    echo -n "  ]"
+    echo "" 
+    return 1
+}
+__echo_warning() {
+    echo -n "[ "
+    $SETCOLOR_WARNING
+    echo -n $1
+    $SETCOLOR_NORMAL
+    echo -n "  ]"
+    echo " " 
+    return 1
+}
+
+__empty() {
+    local val="$1"
+    if [ "$val" ];then
+        return 0
+    fi
+
+    return 1
+}
+
+__now_date_time() {
+    echo $(date '+ %F %T');
+}
+
+__localIP() {
+    echo $(/usr/sbin/ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/' | cut -f1,2,3,4 -d .)
+}
+
+__detection_of_php_extensions() {
+    local ext_name="$1"
+    local already_install=1
+
+    list=$(/usr/local/php/bin/php -m | grep "$ext_name" | awk '{print $1}')
+
+    for v in $list
+    do
+        if [[ "$v"x == "$ext_name"x ]]
+        then
+            already_install=0
+            break
+        fi
+    done 
+    
+    if [ "$already_install" ]
+    then
+        __echo_warning "Already install extension 【 $ext_name 】."
+        exit 0
+        #read -p "Already install extension 【 $ext_name 】. Reinstall ？"
+    fi 
+
+    return $already_install
+}
+
+__make_and_cd_tar_dir()
+{
+    if [[ -z "$TAR_DIR" ]]
+    then
+        TAR_DIR="$ROOT_DIR/storage/tar"
+    fi
+
+    if [[ ! -d $TAR_DIR ]]
+    then
+        mkdir -p $TAR_DIR
+    fi
+
+    cd "${TAR_DIR}"
+}
+
+#yaxios "gearman-1.1.2.tgz" http://pecl.php.net/get/gearman-1.1.2.tgz
+#log_success "HELLO WORLD"
+#echo $[ ${LOGGER_REPORTING} & ${LOGGER_MAIL} ] 

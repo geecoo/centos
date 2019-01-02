@@ -1,0 +1,82 @@
+#!/bin/bash
+
+# Checks whether memcached is installed 
+VER_INS_DIR="$INSTALL_PREFIX/memcached"
+
+if [[ -d "$VER_INS_DIR"  ]]
+then
+    read -p "Memcached is already installed. Reinstall now ?"
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        rm -fr "$VER_INS_DIR" 
+    else
+        exit 0
+    fi
+fi
+
+# download directory
+if [ "$(type -t __make_and_cd_tar_dir)" = "function" ] 
+then
+    __make_and_cd_tar_dir
+fi
+
+yum install -y libevent libevent-devel
+
+VER_NAME="memcached-1.5.12.tar.gz"
+
+if [[ ! -f "$VER_NAME" ]]
+then
+    wget -O "$VER_NAME" "http://memcached.org/files/$VER_NAME"
+fi
+
+tar -xzvf "$VER_NAME" && cd ${VER_NAME:0:(-7)}
+
+if [[ "$?" -ne 0 ]]
+then
+    echo "Not found directory ${VER_NAME:0:(-7)}"
+    exit 1
+fi
+
+./configure --prefix=$VER_INS_DIR  --with-libevent=/usr
+
+make && make install
+
+if [[ "$?" -ne 0 ]]
+then
+    log_error "Memcached install failed."
+    exit 1
+fi
+
+log_success "Memcached install success."
+
+cat <<EOF
+
+/usr/local/memcached/bin/memcached -d -m 512 -u apache -p 11211 -c 25600
+
+/usr/bin/memcached -p 11211 -d -u root -P /var/run/memcached.pid
+    -d  选项是启动一个守护进程
+    -m  是分配给Memcache使用的内存数量, 默认64MB
+    -u  是运行Memcache的用户，默认是root
+    -l  是监听的服务器IP地址，如果有多个地址的话，指定多次，我这里指定了服务器的IP地址192.168.12.23
+    -p  是设置Memcache监听的端口，默认11211，最好是1024以上的端口
+    -c  选项是最大运行的并发连接数，默认是1024，按照你服务器的负载量来设定
+    -P  是设置保存Memcache的pid文件，我这里是保存在 /tmp/memcached.pid
+
+shell> telnet 127.0.0.1 11211
+
+命令行直接操作命令
+1) 存数据
+    Set：添加一个新条目到memcached或是用新的数据替换替换掉已存在的条目 
+    Add：当KEY不存在的情况下，它向memcached存数据，否则，返回NOT_STORED响应 
+    Replace：当KEY存在的情况下，它才会向memcached存数据，否则返回NOT_STORED响应 
+    Cas:改变一个存在的KEY值 ，但它还带了检查的功能 
+    Append:在这个值后面插入新值 
+    Prepend:在这个值前面插入新值 
+
+2) 取数据
+    Get:取单个值，从缓存中返回数据时，将在第一行得到KEY的名字，
+        flag的值和返回的value长度，真正的数据在第二行，最后返回END，如KEY不存在，第一行就直接返回END 
+    Get_multi：一次性取多个值
+
+3) 删除数据
+    Delete 
+EOF

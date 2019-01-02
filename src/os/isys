@@ -1,0 +1,173 @@
+#!/usr/bin/env bash
+
+# Set timezone
+/usr/bin/cp -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+# Install yum fast mirror  
+yum install -y yum-plugin-fastestmirror
+
+# Update kernel
+yum clean all
+yum update -y
+
+sleep 2
+# Install all develop package
+# yum remove -y dhclient dhcp-*
+
+# Add epel 
+rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7-11.noarch.rpm
+
+sleep 2
+
+# Install all packages
+LIST_PACKS=(
+ntp \
+wget \
+unzip \
+bzip2 \
+telnet \
+rsync \
+patch \
+net-tools \
+python \
+python-devel \
+make \
+cmake \
+autoconf \
+automake  \
+gcc-c++ \
+gcc \ 
+curl \
+curl-devel \
+libcurl \
+libcurl-devel  \
+libxml2 \
+libxml2-devel  \
+bzip2*  \
+mhash  \
+mhash-devel \
+pcre \
+pcre-devel \
+openssl \
+openssl-devel \
+zlib \
+zlib-devel \
+php-devel \
+gd \
+freetype \
+freetype-devel \
+libjpeg \
+libjpeg-devel \
+libpng \
+libpng-devel  \
+libicu \
+libicu-devel \
+gtk+-devel \ 
+compat* \
+cpp \
+glibc \
+libgomp \
+libstdc++-devel \
+keyutils-libs-devel \
+libsepol-devel \
+libselinux-devel \
+krb5-devel \
+libXpm*   \
+fontconfig \
+fontconfig-devel \
+ncurses* \
+readline* \
+libaio* \
+libtool* \
+perl-ExtUtils-Embed \
+svn \
+git \
+ctags \
+yum-axelget \
+mcrypt \
+libmcrypt \
+libmcrypt-devel\
+libxslt \
+libxslt-devel 
+)
+
+for packagename in "${LIST_PACKS[@]}"
+do
+    yum install -y "$packagename"
+    usleep 512 
+done
+
+unset $LIST_PACKS
+unset $packagename
+
+sleep 2
+
+
+current_pwd=$(pwd)
+
+cd ${TAR_SRC}
+
+# cmake > 3.0 
+#wget https://libzip.org/download/libzip-1.5.0.tar.gz
+#tar -zxvf libzip-*
+#cd libzip*
+#mkdir build && cd build && cmake .. && make && make install
+
+yum remove libzip -y
+wget https://nih.at/libzip/libzip-1.2.0.tar.gz
+tar -zxvf libzip-1.2.0.tar.gz
+cd libzip-1.2.0
+./configure
+make && make install
+
+ln -s /usr/local/lib/libzip/include/zipconf.h /usr/local/include
+
+cd $current_pwd
+
+#yum -y groupinstall "Development tools" "Server Platform Development"  
+
+# Disable selinux
+setenforce 0
+sed -i "s/SELINUX=enforcing/SELINUX=disabled/" /etc/selinux/config
+getenforce
+
+# Disable firewall
+yum install iptables-services -y
+
+systemctl stop firewalld
+systemctl disable firewalld
+
+#systemctl start iptables
+#systemctl enable iptables
+systemctl stop iptables
+systemctl disable iptables
+
+#systemctl start ip6tables
+#systemctl enable ip6tables
+systemctl stop ip6tables
+systemctl disable ip6tables
+
+# Install ntpdate
+yum install -y ntpdate
+
+# Set ntpdate
+# https://www.ntppool.org/zh/use.html
+#awk '$0~/cn.poll.ntp.org/' /etc/ntp/step-tickers
+local file_step_tickers=/etc/ntp/step-tickers
+grep 'cn.poll.ntp.org' ${file_step_tickers}
+if [ "$?" -ne 0 -a -f "$file_step_tickers" ];then
+    echo 'cn.poll.ntp.org' >> ${file_step_tickers}
+fi
+
+sed -i 's/^SYNC_HWCLOCK=no/SYNC_HWCLOCK=yes/' /etc/sysconfig/ntpdate   
+systemctl status ntpd
+systemctl enable ntpd
+systemctl start  ntpd
+
+# 动态链接库
+echo '/usr/local/lib64
+/usr/local/lib
+/usr/lib
+/usr/lib64'>>/etc/ld.so.conf&&ldconfig -v
+
+

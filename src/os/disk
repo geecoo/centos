@@ -1,0 +1,23 @@
+#! /bin/bash
+# Disk full send email
+DISK_LOG="$LOG_DIR"/disk.tmp
+rm -f "$DISK_LOG" 
+
+#LANG=en
+
+for r in `df -h |awk -F '[ %]+' '{print $5}'|grep -v Use|grep -v 已用`
+do
+    # Log if the partition rate is greater than 90
+    if [ $r -gt 90 ];then
+        printf "[ %s ] %s disk usage is $r%% \n"  "$(__now_date_time)" "$(__localIP)"  >> "$DISK_LOG"
+    fi
+done
+
+if [ -f "$DISK_LOG" ]
+then
+    df -h >> "$DISK_LOG"
+    #/bin/bash ../mail/mail.sh $addr\_disk $r ../log/disk.tmp
+    printf  "[ %s ] Disk usage is nearly full."  "$(__now_date_time)"
+else
+    printf  "[ %s ] Disk usage is ok."  "$(__now_date_time)"
+fi

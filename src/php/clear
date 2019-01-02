@@ -1,0 +1,14 @@
+#!/usr/bin/bash
+
+clear_all_version() {
+    rpm -e $(rpm -qa | grep php-cli)
+    rpm -e $(rpm -qa | grep php-devel)
+    rpm -e $(rpm -qa | grep php-common)
+
+    rm -fr /usr/lib64/php/modules
+    rm -fr /usr/local/php
+    rm -fr /etc/init.d/php-fpm
+    rm -fr /etc/php.*
+}
+
+clear_all_version

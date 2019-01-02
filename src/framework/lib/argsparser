@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+
+argsparser() {
+    ARGS=`getopt -a -o i:d:m:P:I:D:hy -l invoke:,do:,module:,params:instence:,database:,help -- "$@"`
+    
+    [ $? -ne 0 ] && Usage
+
+    #set -- "${ARGS}"
+    # 防止参数中有shell命令，被错误的扩展
+    eval set -- "${ARGS}"
+
+    while true
+    do
+    case "$1" in
+         -y)
+            # 同意
+            REPLY_YES=1
+            ;;
+         -d|--do)
+            COO_DO="$2"
+            shift
+            ;;
+         -i|--invoke)
+            COO_INVOKE="$2"
+            shift
+            ;;
+         -m|--module)
+            COO_MODULE="$2"
+            shift
+            ;;
+        -P)
+            params="$2"
+            shift
+            ;;
+        -I|--instence)
+            instence="$2"
+            shift
+            ;;
+        -D|--database)
+            database="$2"
+            shift
+            ;;
+        -h|--help)
+            Usage
+            exit 0
+            ;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            continue
+            ;;
+    esac
+        shift
+    done
+
+    #for arg do echo '--> '"\`$arg'" ; done 
+}
+
+# 探测执行脚本的位置
+finder() {
+    local caller="$1"
+    local path
+
+    log_info "Looking for command '${caller}' path." 
+
+    path=$(find ${ROOT_DIR} -type f -name ${caller})
+    if [ ! "$path" ];then 
+        log_info "Caller '${caller}' path not found." 
+        exit 0
+    fi
+
+    /bin/echo -nE "$path"
+    return 0
+}
+
+finder_src() {
+    local caller="$1"
+    local path
+
+    log_info "Looking for command '${caller}' path." 
+
+    path=$(find ${SRC_DIR} -type f -name ${caller})
+
+    if [ ! "$path" ];then 
+        log_info "Caller '${caller}' path not found." 
+        exit 0
+    fi
+
+    /bin/echo -nE "$path"
+    return 0
+}
