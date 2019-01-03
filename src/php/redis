@@ -1,0 +1,42 @@
+#!/usr/bin/bash
+
+if [[ -z "$TAR_DIR" ]]
+then
+    TAR_DIR="$ROOT_DIR/storage/tar"
+    mkdir -p $TAR_DIR
+fi
+
+cd "${TAR_DIR}"
+
+if [[ ! -f "redis-4.2.0.tgz" ]]
+then
+    wget -O redis-4.2.0.tgz http://pecl.php.net/get/redis-4.2.0.tgz
+fi
+
+tar -xzvf redis-4.2.0.tgz
+
+cd redis-4.2.0
+
+if [[ "$?" -ne 0 ]];then
+    __echo_warning "Not found directory redis-4.2.0"
+    exit 1
+fi
+
+/usr/local/php/bin/phpize
+
+./configure --with-php-config=/usr/local/php/bin/php-config
+
+make && make install
+
+if [[ "$?" -ne 0 ]]
+then
+    __echo_warning "Redis install failed"
+    exit 1
+fi
+
+if [[ "$?" -eq 0 ]]
+then
+    echo "extension=redis.so" >> /etc/php.ini
+    __echo_success "Redis install success"
+fi
+
