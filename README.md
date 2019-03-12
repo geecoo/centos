@@ -139,3 +139,77 @@ man git-< verb >
 ```
 
 
+* PHP 7.3 最新版本编译扩展失败
+##### solor
+```
+
+1. src/php7/php_solr.c
+   PHP_ME(SolrDocument, __clone, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CLONE)
+   PHP_ME(SolrInputDocument, __clone, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CLONE)
+   PHP_ME(SolrClient, __clone, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CLONE)
+   PHP_ME(SolrParams, __clone, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CLONE)
+   把文件中所有的ZEND_ACC_CLONE去掉
+   
+2. src/php7/solr_functions_helpers.c
+   把文件中的函数 solr_pcre_replace_into_buffer 换成以下函数
+   static inline int solr_pcre_replace_into_buffer(solr_string_t *buffer, char * search, char *replace)
+{
+    zend_string *result;
+    zval replace_val;
+    int limit = -1;
+    int replace_count = -1;
+    zend_string *regex_str = zend_string_init(search, strlen(search), 0);
+    zend_string *subject_str = zend_string_init(buffer->str, buffer->len, 0);
+    #if PHP_VERSION_ID >= 70200
+        zend_string *replace_str = zend_string_init(replace, strlen(replace), 0);
+    #else
+        zval replace_val;
+        ZVAL_STRING(&replace_val, replace);
+    #endif
+    result = php_pcre_replace(
+            regex_str,
+            subject_str,
+            buffer->str,
+            buffer->len,
+            #if PHP_VERSION_ID >= 70200
+                replace_str,
+            #else
+                &replace_val,
+                0
+            #endif
+            limit,
+            &replace_count
+    );
+
+    solr_string_set_ex(buffer, (solr_char_t *)result->val, (size_t)result->len);
+/*    fprintf(stdout, "%s", buffer->str); */
+    efree(result);
+    #if PHP_VERSION_ID >= 70200
+        zend_string_release(replace_str);
+    #else
+        zval_ptr_dtor(&replace_val);
+    #endif
+    zend_string_release(regex_str);
+    zend_string_release(subject_str);
+
+    return SUCCESS;
+}
+
+
+相关记录
+https://bugs.php.net/bug.php?id=74736
+https://git.php.net/?p=pecl/search_engine/solr.git;a=commit;h=744e32915d5989101267ed2c84a407c582dc6f31
+https://blog.51cto.com/3502902/2336742?source=dra
+```
+
+#### yaf
+```
+yaf-3.0.7/yaf_session.c
+找到ZEND_WRONG_PROPERTY_OFFSET所在位置，更换以下判断，版本7.3不支持常量ZEND_WRONG_PROPERTY_OFFSET
+#if PHP_VERSION_ID < 70300
+   if (property_info->offset != ZEND_WRONG_PROPERTY_OFFSET)
+#else
+    if (IS_VALID_PROPERTY_OFFSET(property_info->offset))
+#endif
+```
+
